@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Warga RT. 06 Reni Jaya</title>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* ============================
+           HEADER ELEGAN + ANIMASI
+        ============================= */
+        .header-elegant {
+            background: linear-gradient(160deg, #002f2f, #005f4f, #008f7a);
+            color: white;
+            padding: 80px 20px;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            animation: fadeIn 1.2s ease-out;
+        }
+
+        .header-elegant::before {
+            content: "";
+            position: absolute;
+            bottom: -60px;
+            left: 0;
+            width: 100%;
+            height: 180px;
+            background: rgba(255,255,255,0.12);
+            border-radius: 50% 50% 0 0;
+            filter: blur(20px);
+            animation: glowPulse 4s ease-in-out infinite;
+        }
+
+        .header-elegant::after {
+            content: "";
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 220px;
+            height: 220px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+            animation: glowPulse 5s ease-in-out infinite;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            animation: slideUp 1.2s ease-out;
+        }
+
+        .logo-elegant {
+            width: 150px;
+            height: auto;
+            border-radius: 50%;
+            border: 4px solid rgba(255,255,255,0.85);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+            margin-bottom: 22px;
+            backdrop-filter: blur(5px);
+            animation: softFloat 4s ease-in-out infinite;
+        }
+
+        .title-elegant {
+            font-size: 2.5em;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            animation: fadeIn 1.6s ease-out;
+        }
+
+        .slogan-elegant {
+            margin-top: 12px;
+            font-size: 1.35em;
+            opacity: 0.9;
+            font-weight: 300;
+            animation: fadeIn 2s ease-out;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes softFloat {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+
+        @keyframes glowPulse {
+            0% { opacity: 0.15; }
+            50% { opacity: 0.3; }
+            100% { opacity: 0.15; }
+        }
+
+        /* ============================
+           FITUR LAYANAN
+        ============================= */
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 40px 0;
+        }
+
+        .feature-card {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 30%;
+            min-width: 250px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-card h3 {
+            color: #004d40;
+            margin-top: 0;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        /* ============================
+           FOOTER
+        ============================= */
+        .footer {
+        background: linear-gradient(145deg, #002e28, #004d40);
+        color: white;
+        text-align: center;
+        padding: 30px 15px;
+        margin-top: 40px;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        }
+        
+        
+        .footer p {
+        margin: 5px 0;
+        font-size: 0.95em;
+        opacity: 0.9;
+        }
+        
+        @media(max-width:600px) {
+            .feature-card { width:100%; }
+            h1{font-size:2.1em;} 
+          
+        }
+
+        
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER ELEGAN DENGAN ANIMASI -->
+    <div class="header-elegant">
+        <div class="header-content">
+            <img src="images/logo_rt06.png" alt="Logo RT 06" class="logo-elegant">
+
+            <h1 class="title-elegant">Portal Warga RT. 06</h1>
+            <p class="slogan-elegant">
+                Bersama Mewujudkan Lingkungan Asri, Aman, dan Harmonis di Reni Jaya.
+            </p>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Layanan & Informasi Utama</h2>
+
+        <div class="features">
+
+            <div class="feature-card">
+                <h3>📢 Informasi Terbaru</h3>
+                <p>Cek pengumuman, jadwal kegiatan, dan berita terkini dari Pengurus RT. 06.</p>
+                <a href="informasi.html" class="btn-primary" style="background-color: #28a745;" target="_blank">
+                    Lihat Pengumuman
+                </a>
+            </div>
+
+            <div class="feature-card">
+                <h3>✍️ Layanan Surat & Laporan</h3>
+                <p>Ajukan permohonan surat pengantar, izin keramaian, atau laporkan masalah lingkungan.</p>
+                <a href="layanan.html" class="btn-primary" style="background-color: #ffc107; color: #333;" target="_blank">
+                    Ajukan Permohonan
+                </a>
+            </div>
+
+            <div class="feature-card">
+                <h3>🏠 Data & Donasi</h3>
+                <p>Akses data iuran kas RT, laporan keuangan, dan informasi kontak penting warga.</p>
+                <a href="keuangan.html" class="btn-primary" style="background-color: #17a2b8;" target="_blank">
+                    Cek Keuangan
+                </a>
+            </div>
+
+        </div>
+
+        <h2>Tentang RT. 06 Reni Jaya</h2>
+        <p>Kami hadir sebagai platform digital untuk mempermudah komunikasi, transparansi, dan kolaborasi antara Pengurus RT dan seluruh warga. Mari bersama-sama membangun lingkungan yang lebih baik.</p>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2025 Portal Warga RT. 06 Reni Jaya.<br>Powered by Semangat Gotong Royong.</p>
+    </div>
+
+</body>
+</html>
