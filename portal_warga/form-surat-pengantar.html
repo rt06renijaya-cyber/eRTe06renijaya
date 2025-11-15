@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Pengajuan Surat Pengantar RT. 06</title>
+    
+    <style>
+        /* Styling Umum */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e9ecef;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 0;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h2 {
+            color: #007bff;
+            margin-bottom: 5px;
+            font-size: 24px;
+        }
+
+        header p {
+            color: #6c757d;
+            font-size: 16px;
+        }
+
+        /* Bagian Form (Section) */
+        .form-section {
+            border: 1px solid #dee2e6;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            background-color: #f8f9fa;
+        }
+
+        .form-section h3 {
+            color: #343a40;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        /* Form Group */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        /* Input Fields, Select, Textarea */
+        input[type="text"],
+        input[type="tel"],
+        input[type="date"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            box-sizing: border-box; 
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            outline: none;
+        }
+
+        /* Grid for combined fields */
+        .grid-2-cols {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        @media (min-width: 480px) {
+            .grid-2-cols {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Tombol Submit */
+        button[type="submit"] {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 15px;
+            transition: background-color 0.3s;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #218838;
+        }
+
+        /* Responsif Mobile */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px 0;
+            }
+
+            .container {
+                padding: 20px;
+                margin: 0 10px;
+                box-shadow: none;
+            }
+
+            header h2 {
+                font-size: 20px;
+            }
+
+            .form-section {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h2>Form Pengajuan Surat Pengantar RT. 06 📝</h2>
+            <p>Mohon isi data diri Anda dengan lengkap dan benar.</p>
+        </header>
+        
+        <form action="https://script.google.com/macros/s/AKfycbyJ1C7C9SeqsSQqSdT45FQlYJEOFNavcoKqDZNuPXLpcZ6BiVl3-0LQy1HZbO1sZtaV/exec" method="POST">
+            
+            <!-- SECTION 1: IDENTITAS DIRI -->
+            <div class="form-section">
+                <h3>Identitas Diri</h3>
+                
+                <div class="form-group">
+                    <label for="nama">Nama Lengkap</label>
+                    <input type="text" id="nama" name="Nama Lengkap" required placeholder="Contoh: Andre Taulany">
+                </div>
+                
+                <div class="form-group">
+                    <label>Tempat dan Tanggal Lahir</label>
+                    <div class="grid-2-cols">
+                        <input type="text" id="tempat_lahir" name="Tempat Lahir" required placeholder="Tempat Lahir">
+                        <input type="date" id="tanggal_lahir" name="Tanggal Lahir" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="alamat">Alamat Lengkap</label>
+                    <textarea id="alamat" name="Alamat Lengkap" rows="3" required placeholder="Jalan, RT/RW, Kelurahan, Kecamatan"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="jenis_kelamin">Jenis Kelamin</label>
+                    <select id="jenis_kelamin" name="Jenis Kelamin" required>
+                        <option value="">-- Pilih Jenis Kelamin --</option>
+                        <option value="Laki-laki">Laki-laki</option>
+                        <option value="Perempuan">Perempuan</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="agama">Agama</label>
+                    <select id="agama" name="Agama" required>
+                        <option value="">-- Pilih Agama --</option>
+                        <option value="Islam">Islam</option>
+                        <option value="Kristen">Kristen</option>
+                        <option value="Katolik">Katolik</option>
+                        <option value="Hindu">Hindu</option>
+                        <option value="Buddha">Buddha</option>
+                        <option value="Konghucu">Konghucu</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="status_perkawinan">Status Perkawinan</label>
+                    <select id="status_perkawinan" name="Status Perkawinan" required>
+                        <option value="">-- Pilih Status Perkawinan --</option>
+                        <option value="Belum Kawin">Belum Kawin</option>
+                        <option value="Kawin">Kawin</option>
+                        <option value="Cerai Hidup">Cerai Hidup</option>
+                        <option value="Cerai Mati">Cerai Mati</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="kewarganegaraan">Status Kewarganegaraan</label>
+                    <select id="kewarganegaraan" name="Kewarganegaraan" required>
+                        <option value="">-- Pilih Kewarganegaraan --</option>
+                        <option value="WNI">WNI (Warga Negara Indonesia)</option>
+                        <option value="WNA">WNA (Warga Negara Asing)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="pendidikan">Pendidikan Terakhir</label>
+                    <select id="pendidikan" name="Pendidikan Terakhir" required>
+                        <option value="">-- Pilih Pendidikan --</option>
+                        <option value="SD">SD</option>
+                        <option value="SMP/SLTP">SMP/SLTP</option>
+                        <option value="SMA/SLTA">SMA/SLTA</option>
+                        <option value="SMK">SMK</option>
+                        <option value="Diploma">Diploma</option>
+                        <option value="Sarjana">Sarjana</option>
+                        <option value="Magister">Magister</option>
+                    </select>
+                </div>
+
+                 <div class="form-group">
+                    <label for="pekerjaan">Pekerjaan</label>
+                    <select id="pekerjaan" name="Pekerjaan" required>
+                        <option value="">-- Pilih Pekerjaan --</option>
+                        <option value="Ibu Rumah Tangga">Ibu Rumah Tangga</option>
+                        <option value="Pelajar">Pelajar</option>
+                        <option value="Mahasiswa">Mahasiswa</option>
+                        <option value="Karyawan Swasta">Karyawan Swasta</option>
+                        <option value="Karyawan BUMD">Karyawan BUMD</option>
+                        <option value="PNS">PNS</option>
+                        <option value="Wiraswasta">Wiraswasta</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="hp">No. Handphone Aktif</label>
+                    <input type="tel" id="hp" name="No. Handphone" required pattern="[0-9]{10,14}" placeholder="Contoh: 081234567890">
+                </div>
+            </div>
+            
+            <!-- SECTION 2: DETAIL DOKUMEN -->
+            <div class="form-section">
+                <h3>Detail Dokumen & Lainnya</h3>
+                
+                <div class="form-group">
+                    <label for="nik">NIK (Nomor Induk Kependudukan)</label>
+                    <input type="text" id="nik" name="No. NIK" required pattern="[0-9]{16}" maxlength="16" placeholder="16 digit angka NIK">
+                </div>
+                
+                <div class="form-group">
+                    <label for="kk">Nomor KK (Kartu Keluarga)</label>
+                    <input type="text" id="kk" name="No. KK" required pattern="[0-9]{16}" maxlength="16" placeholder="16 digit angka KK">
+                </div>
+                
+                <div class="form-group">
+                    <label for="hubungan_keluarga">Hubungan Keluarga</label>
+                    <select id="hubungan_keluarga" name="Hubungan Keluarga" required>
+                        <option value="">-- Pilih Hubungan --</option>
+                        <option value="Kepala Rumah Tangga">Kepala Rumah Tangga</option>
+                        <option value="Istri">Istri</option>
+                        <option value="Anak">Anak</option>
+                        <option value="Cucu">Cucu</option>
+                        <option value="Keluarga Lain">Keluarga Lain</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="status_rumah">Status Rumah Tinggal</label>
+                    <select id="status_rumah" name="Status Rumah" required>
+                        <option value="">-- Pilih Status Rumah --</option>
+                        <option value="Milik Sendiri">Milik Sendiri</option>
+                        <option value="Kontrak/Sewa">Kontrak/Sewa</option>
+                        <option value="Numpang">Numpang</option>
+                        <option value="Dinas">Dinas</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="keperluan_surat">Keperluan Surat</label>
+                    <textarea id="keperluan_surat" name="Keperluan Surat" rows="2" placeholder="Contoh: Pengurusan KTP, Pengantar Nikah, Keterangan Usaha" required></textarea>
+                </div>
+            </div>
+
+            <button type="submit" name="submit">Kirim Data</button>
+        </form>
+    </div>
+</body>
+</html>
