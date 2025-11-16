@@ -13,180 +13,81 @@
 
     <style>
 
-            /* === GLOBAL === */
     body {
         margin: 0;
         padding: 0;
         font-family: 'Inter', sans-serif;
         background: #f5f8fc;
+        color: #333;
     }
-    
-    /* Container utama */
+
     .container {
         max-width: 900px;
         margin: auto;
         padding: 16px;
     }
-    
-    /* === CARD === */
+
     .card {
         background: white;
-        border-radius: 18px;
-        padding: 20px;
+        border-radius: 16px;
+        padding: 18px;
         margin-bottom: 20px;
         box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
     }
-    
-    /* === GRAFIK === */
-    .chart-container {
-        width: 100% !important;
-        height: auto !important;
-        max-height: 260px;     /* grafik lebih kecil */
-        overflow: hidden;
+
+    h2 {
+        font-size: 20px;
+        text-align: center;
+        margin: 0 0 16px;
+        font-weight: 700;
+        color: #2c3e50;
     }
+
+    /* CHART RESPONSIVE */
+    .chart-container {
+        width: 100%;
+        height: 320px;
+        position: relative;
+    }
+
     canvas {
         width: 100% !important;
-        height: auto !important;
+        height: 100% !important;
     }
-    
-    /* === GRID HEADER SALDO === */
-    .saldo-grid {
-        display: flex;
-        justify-content: space-between;
-        gap: 16px;
-    }
-    
-    .saldo-box {
-        flex: 1;
-        text-align: center;
-    }
-    
-    /* === TABEL === */
-    .table-responsive {
-        width: 100%;
-        overflow-x: auto;        /* Supaya tidak pecah di HP */
-    }
-    
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        min-width: 600px;        /* Tabel tidak menyempit */
-    }
-    
-    th, td {
-        padding: 8px 12px;
-        border-bottom: 1px solid #e8e8e8;
-        font-size: 14px;
-        white-space: nowrap;
-    }
-    
-    /* ========================================= */
-    /* === MOBILE RESPONSIVE BREAKPOINT (<480px) */
-    /* ========================================= */
+
+    /* =======================
+       MOBILE (<480px)
+    =========================*/
     @media (max-width: 480px) {
-    
-        h1, h2, h3, h4 {
-            text-align: center;
-        }
-    
+
         .container {
             padding: 10px;
         }
-    
+
+        h2 {
+            font-size: 16px;
+        }
+
         .card {
             padding: 14px;
             border-radius: 14px;
         }
-    
-        /* Grid saldo jadi kolom */
-        .saldo-grid {
-            flex-direction: column;
-        }
-    
-        .saldo-box {
-            text-align: center;
-        }
-    
-        /* Grafik lebih kecil */
+
         .chart-container {
-            max-height: 200px;
+            height: 220px !important; /* ukuran ideal di HP */
         }
-    
-        /* Progress bar mengecil */
-        .progress-bar {
-            height: 8px !important;
+
+        .chart-container canvas {
+            height: 220px !important;
         }
-    
-        table {
-            font-size: 12px;
-            min-width: 480px; /* agar tidak terlalu mepet */
-        }
-        
+
         body {
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            background: #f5f7fa;
-            color: #333;
+            font-size: 13px;
         }
-
-        .container {
-            width: 100%;
-            max-width: 900px;
-            margin: auto;
-            padding: 12px;
-        }
-
-        .card {
-            background: white;
-            border-radius: 14px;
-            padding: 16px;
-            margin-bottom: 18px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.07);
-        }
-
-        h2 {
-            margin: 0 0 12px;
-            font-size: 18px;
-            font-weight: 700;
-            color: #2c3e50;
-            text-align: center;
-        }
-
-        /* ---- FIX RESPONSIVE HP ---- */
-        .chart-container {
-            position: relative;
-            width: 100% !important;
-            max-width: 100% !important;
-            height: 330px;
-            overflow: hidden;
-        }
-
-        canvas {
-            width: 100% !important;
-            height: 100% !important;
-        }
-
-        /* HP MODE */
-        @media(max-width: 600px) {
-
-            .container {
-                padding: 8px;
-            }
-
-            .card {
-                padding: 14px;
-            }
-
-            h2 {
-                font-size: 16px;
-            }
-
-            .chart-container {
-                height: 240px !important; /* ukuran ideal HP */
-            }
-        }
+    }
     </style>
 </head>
+
 <body>
 
 <div class="container">
@@ -216,33 +117,25 @@ async function ambilData() {
     const pemasukan = await pemasukanRes.json();
     const pengeluaran = await pengeluaranRes.json();
 
-    // Hitung total per kategori
     const totalMasuk = {};
     const totalKeluar = {};
 
     pemasukan.forEach(row => {
         const kategori = row.Kategori?.trim();
         const nominal = parseInt(row.Nominal || "0");
-
-        if (kategori) {
-            totalMasuk[kategori] = (totalMasuk[kategori] || 0) + nominal;
-        }
+        if (kategori) totalMasuk[kategori] = (totalMasuk[kategori] || 0) + nominal;
     });
 
     pengeluaran.forEach(row => {
         const kategori = row.Kategori?.trim();
         const nominal = parseInt(row.Nominal || "0");
-
-        if (kategori) {
-            totalKeluar[kategori] = (totalKeluar[kategori] || 0) + nominal;
-        }
+        if (kategori) totalKeluar[kategori] = (totalKeluar[kategori] || 0) + nominal;
     });
 
-    // Gabungkan kategori
     const semuaKategori = Array.from(new Set([
         ...Object.keys(totalMasuk),
         ...Object.keys(totalKeluar)
-    ])).sort(); // A-Z
+    ])).sort();
 
     const dataMasuk = semuaKategori.map(k => totalMasuk[k] || 0);
     const dataKeluar = semuaKategori.map(k => totalKeluar[k] || 0);
@@ -262,17 +155,19 @@ function buatChart(labels, masuk, keluar) {
                     label: "Pemasukan",
                     data: masuk,
                     borderColor: "#2ecc71",
-                    backgroundColor: "rgba(46, 204, 113, 0.25)",
+                    backgroundColor: "rgba(46,204,113,0.18)",
                     borderWidth: 3,
-                    tension: 0.35
+                    tension: 0.4,
+                    pointRadius: 3
                 },
                 {
                     label: "Pengeluaran",
                     data: keluar,
                     borderColor: "#e74c3c",
-                    backgroundColor: "rgba(231, 76, 60, 0.25)",
+                    backgroundColor: "rgba(231,76,60,0.18)",
                     borderWidth: 3,
-                    tension: 0.35
+                    tension: 0.4,
+                    pointRadius: 3
                 }
             ]
         },
@@ -284,10 +179,17 @@ function buatChart(labels, masuk, keluar) {
             },
             scales: {
                 x: {
-                    ticks: { maxRotation: 45, minRotation: 0 }
+                    ticks: {
+                        maxRotation: 60,
+                        minRotation: 0,
+                        font: { size: 10 }   // lebih kecil di HP
+                    }
                 },
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    ticks: {
+                        font: { size: 10 }   // lebih kecil
+                    }
                 }
             }
         }
