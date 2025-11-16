@@ -81,8 +81,12 @@
     </div>
 
 <script>
-const SHEET_URL = "https://opensheet.elk.sh/1GSJZc0vKMCFDG-0KWAEYYcqFYiXSJEw9o2rMnHSpqX8";
-const pemasukanURL = SHEET_URL + "/web_Pemasukan";
+// 🌟 PAKAI ID GOOGLE SHEET YANG BENAR
+const SHEET_ID = "1EMYpie82paCl-vupfhyj11Z9tNGFp2p7aIDwIIl_Z0o";
+const SHEET_URL = "https://opensheet.elk.sh/" + SHEET_ID;
+
+// 🌟 Tab yang dipakai
+const pemasukanURL   = SHEET_URL + "/web_Pemasukan";
 const pengeluaranURL = SHEET_URL + "/web_Pengeluaran";
 
 function formatRupiah(num) {
@@ -105,7 +109,7 @@ async function loadData() {
         const tablePemasukan = document.querySelector("#table-pemasukan tbody");
         const tablePengeluaran = document.querySelector("#table-pengeluaran tbody");
 
-        // Tampil Pemasukan
+        // Pemasukan
         pemasukan.forEach(row => {
             if (!row.Jumlah) return;
             const jumlah = Number(row.Jumlah.replace(/[^0-9]/g, ""));
@@ -121,7 +125,7 @@ async function loadData() {
             `;
         });
 
-        // Tampil Pengeluaran
+        // Pengeluaran
         pengeluaran.forEach(row => {
             if (!row.Jumlah) return;
             const jumlah = Number(row.Jumlah.replace(/[^0-9]/g, ""));
@@ -137,11 +141,12 @@ async function loadData() {
             `;
         });
 
-        // Update Summary
+        // Summary
         document.getElementById("total-pemasukan").innerText = formatRupiah(totalPemasukan);
         document.getElementById("total-pengeluaran").innerText = formatRupiah(totalPengeluaran);
         document.getElementById("saldo-akhir").innerText = formatRupiah(totalPemasukan - totalPengeluaran);
 
+        // Show content
         document.getElementById("loading").style.display = "none";
         document.getElementById("content").style.display = "block";
 
