@@ -1,123 +1,88 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Laporan Keuangan RT 06</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Laporan Keuangan RT 06 Reni Jaya</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
     body {
-        font-family: "Segoe UI", Arial, sans-serif;
+        font-family: "Inter", sans-serif;
+        background: #f4f6f8;
         margin: 0;
-        background: #f0f2f5;
+        padding: 0;
         color: #333;
     }
-
     header {
-        background: #ffffff;
-        padding: 25px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.08);
-        margin-bottom: 25px;
+        padding: 24px;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 24px;
         text-align: center;
     }
-
     h1 {
-        margin: 0;
         font-size: 28px;
         font-weight: 700;
-        color: #222;
+        margin: 0;
     }
-
     .container {
-        width: 92%;
+        width: 95%;
         max-width: 1100px;
         margin: auto;
     }
-
-    .summary-box {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        gap: 18px;
-        margin-bottom: 25px;
-    }
-
     .card {
         background: white;
-        padding: 18px;
-        border-radius: 12px;
-        box-shadow: 0 3px 8px rgba(0,0,0,0.08);
-        border-left: 6px solid #3f8efc;
+        border-radius: 14px;
+        padding: 20px;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+        margin-bottom: 24px;
     }
-
-    .card h3 {
-        margin: 0;
-        font-size: 16px;
-        color: #666;
+    .summary-item {
+        font-size: 18px;
+        margin: 8px 0;
     }
-
-    .card p {
-        font-size: 22px;
-        margin: 8px 0 0;
-        font-weight: bold;
-        color: #222;
-    }
-
-    h2 {
-        margin-top: 40px;
-        margin-bottom: 10px;
-        font-size: 22px;
-        color: #333;
+    .summary-item b {
+        font-weight: 700;
     }
 
     table {
         width: 100%;
         border-collapse: collapse;
-        margin-bottom: 35px;
-        background: white;
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-
-    th {
-        background: #3f8efc;
-        color: white;
-        padding: 10px;
-        text-align: left;
-        font-size: 15px;
-    }
-
-    td {
-        padding: 9px 10px;
-        border-bottom: 1px solid #f2f2f2;
+        margin-top: 10px;
         font-size: 14px;
     }
-
-    tr:nth-child(even) {
+    th, td {
+        padding: 12px;
+        border-bottom: 1px solid #e3e3e3;
+        text-align: left;
+    }
+    th {
+        background: #f1f1f1;
+        font-weight: 600;
+    }
+    tr:hover {
         background: #fafafa;
     }
 
-    #loading {
-        text-align: center;
-        padding: 40px;
-        font-size: 20px;
-        font-weight: bold;
-        color: #666;
+    .chart-wrapper {
+        width: 100%;
+        margin-top: 20px;
     }
 
-    canvas {
-        background: white;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        margin-bottom: 35px;
+    @media only screen and (max-width: 600px) {
+        h1 { font-size: 22px; }
+        table { font-size: 12px; }
+        th, td { padding: 8px; }
     }
 </style>
-
 </head>
+
 <body>
 
 <header>
@@ -126,147 +91,147 @@
 
 <div class="container">
 
-    <div id="loading">Memuat data...</div>
-
-    <div id="content" style="display:none;">
-
-        <div class="summary-box">
-            <div class="card">
-                <h3>Total Pemasukan</h3>
-                <p id="total-pemasukan">Rp0</p>
-            </div>
-            <div class="card">
-                <h3>Total Pengeluaran</h3>
-                <p id="total-pengeluaran">Rp0</p>
-            </div>
-            <div class="card">
-                <h3>Saldo Akhir</h3>
-                <p id="saldo-akhir">Rp0</p>
-            </div>
-        </div>
-
-        <canvas id="chartKeuangan"></canvas>
-
-        <h2>Data Pemasukan</h2>
-        <table id="table-pemasukan">
-            <thead>
-                <tr>
-                    <th>Tanggal</th>
-                    <th>Jumlah</th>
-                    <th>Keterangan</th>
-                    <th>Kategori</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-
-        <h2>Data Pengeluaran</h2>
-        <table id="table-pengeluaran">
-            <thead>
-                <tr>
-                    <th>Tanggal</th>
-                    <th>Jumlah</th>
-                    <th>Keterangan</th>
-                    <th>Kategori</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-
+    <!-- Summary Card -->
+    <div class="card">
+        <div class="summary-item"><b>Total Pemasukan:</b> <span id="totalIn">Rp0</span></div>
+        <div class="summary-item"><b>Total Pengeluaran:</b> <span id="totalOut">Rp0</span></div>
+        <div class="summary-item"><b>Saldo Akhir:</b> <span id="saldo">Rp0</span></div>
     </div>
+
+    <!-- Pie Chart -->
+    <div class="card">
+        <h3>Grafik Pemasukan vs Pengeluaran</h3>
+        <canvas id="pieChart"></canvas>
+    </div>
+
+    <!-- Bar Chart -->
+    <div class="card">
+        <h3>Perkembangan Saldo Bulanan</h3>
+        <canvas id="barChart"></canvas>
+    </div>
+
+    <!-- Table Pemasukan -->
+    <div class="card">
+        <h2>Data Pemasukan</h2>
+        <table id="tabelMasuk">
+            <thead>
+                <tr>
+                    <th>Tanggal</th>
+                    <th>Jumlah</th>
+                    <th>Keterangan</th>
+                    <th>Kategori</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- Table Pengeluaran -->
+    <div class="card">
+        <h2>Data Pengeluaran</h2>
+        <table id="tabelKeluar">
+            <thead>
+                <tr>
+                    <th>Tanggal</th>
+                    <th>Jumlah</th>
+                    <th>Keperluan</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
 </div>
 
 <script>
-const SHEET_URL = "https://opensheet.elk.sh/1EMYpie82paCl-vupfhyj11Z9tNGFp2p7aIDwIIl_Z0o";
-const pemasukanURL = SHEET_URL + "/web_Pemasukan";
-const pengeluaranURL = SHEET_URL + "/web_Pengeluaran";
+// ============= GOOGLE SHEET API ==============
+const SHEET_URL =
+"https://docs.google.com/spreadsheets/d/1EMYpie82paCl-vupfhyj11Z9tNGFp2p7aIDwIIl_Z0o/gviz/tq?tqx=out:json";
 
-const formatRupiah = num =>
-    "Rp" + Number(num).toLocaleString("id-ID");
+// Fetch Data
+async function ambilData() {
+    const res = await fetch(SHEET_URL);
+    const text = await res.text();
+    const json = JSON.parse(text.substring(47, text.length - 2));
 
-async function loadData() {
-    try {
-        const [masukRes, keluarRes] = await Promise.all([
-            fetch(pemasukanURL),
-            fetch(pengeluaranURL)
-        ]);
+    const rows = json.table.rows.map(r => r.c.map(c => c?.v ?? ""));
 
-        const pemasukan = await masukRes.json();
-        const pengeluaran = await keluarRes.json();
-
-        let totalPemasukan = 0;
-        let totalPengeluaran = 0;
-
-        const tbodyMasuk = document.querySelector("#table-pemasukan tbody");
-        const tbodyKeluar = document.querySelector("#table-pengeluaran tbody");
-
-        // PEMASUKAN
-        pemasukan.forEach(row => {
-            if (!row.Jumlah) return;
-            const jumlah = Number(row.Jumlah.replace(/[^0-9]/g, ""));
-            totalPemasukan += jumlah;
-
-            tbodyMasuk.innerHTML += `
-                <tr>
-                    <td>${row.Tanggal}</td>
-                    <td>${formatRupiah(jumlah)}</td>
-                    <td>${row.Keterangan}</td>
-                    <td>${row.Kategori}</td>
-                </tr>
-            `;
-        });
-
-        // PENGELUARAN
-        pengeluaran.forEach(row => {
-            if (!row.Jumlah) return;
-            const jumlah = Number(row.Jumlah.replace(/[^0-9]/g, ""));
-            totalPengeluaran += jumlah;
-
-            tbodyKeluar.innerHTML += `
-                <tr>
-                    <td>${row.Tanggal}</td>
-                    <td>${formatRupiah(jumlah)}</td>
-                    <td>${row.Keterangan}</td>
-                    <td>${row.Kategori}</td>
-                </tr>
-            `;
-        });
-
-        // UPDATE SUMMARY
-        document.getElementById("total-pemasukan").innerText = formatRupiah(totalPemasukan);
-        document.getElementById("total-pengeluaran").innerText = formatRupiah(totalPengeluaran);
-        document.getElementById("saldo-akhir").innerText = formatRupiah(totalPemasukan - totalPengeluaran);
-
-        // TAMPILKAN KONTEN
-        document.getElementById("loading").style.display = "none";
-        document.getElementById("content").style.display = "block";
-
-        // GRAFIK
-        new Chart(document.getElementById('chartKeuangan'), {
-            type: 'bar',
-            data: {
-                labels: ["Pemasukan", "Pengeluaran"],
-                datasets: [{
-                    label: "Total Keuangan",
-                    data: [totalPemasukan, totalPengeluaran],
-                    backgroundColor: ["#4cc9f0", "#f72585"]
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: { beginAtZero: true }
-                }
-            }
-        });
-
-    } catch (e) {
-        console.error(e);
-        document.getElementById("loading").innerText = "Gagal memuat data!";
-    }
+    prosesData(rows);
 }
 
-loadData();
+function formatRupiah(n) {
+    return "Rp" + n.toLocaleString("id-ID");
+}
+
+function prosesData(rows) {
+    let totalMasuk = 0;
+    let totalKeluar = 0;
+
+    const masukTbody = document.querySelector("#tabelMasuk tbody");
+    const keluarTbody = document.querySelector("#tabelKeluar tbody");
+
+    rows.forEach(r => {
+        let jenis = r[3];
+        let jumlah = Number(r[1]) || 0;
+
+        if (jenis === "Masuk") {
+            totalMasuk += jumlah;
+            masukTbody.innerHTML += `
+                <tr>
+                    <td>${r[0]}</td>
+                    <td>${formatRupiah(jumlah)}</td>
+                    <td>${r[2]}</td>
+                    <td>${r[4]}</td>
+                </tr>`;
+        }
+
+        if (jenis === "Keluar") {
+            totalKeluar += jumlah;
+            keluarTbody.innerHTML += `
+                <tr>
+                    <td>${r[0]}</td>
+                    <td>${formatRupiah(jumlah)}</td>
+                    <td>${r[2]}</td>
+                </tr>`;
+        }
+    });
+
+    let saldoAkhir = totalMasuk - totalKeluar;
+
+    document.getElementById("totalIn").innerText = formatRupiah(totalMasuk);
+    document.getElementById("totalOut").innerText = formatRupiah(totalKeluar);
+    document.getElementById("saldo").innerText = formatRupiah(saldoAkhir);
+
+    gambarChart(totalMasuk, totalKeluar);
+}
+
+function gambarChart(masuk, keluar) {
+    new Chart(document.getElementById("pieChart"), {
+        type: "pie",
+        data: {
+            labels: ["Pemasukan", "Pengeluaran"],
+            datasets: [{
+                data: [masuk, keluar],
+                backgroundColor: ["#4CAF50", "#F44336"]
+            }]
+        }
+    });
+
+    new Chart(document.getElementById("barChart"), {
+        type: "bar",
+        data: {
+            labels: ["Saldo"],
+            datasets: [{
+                label: "Saldo Akhir",
+                data: [masuk - keluar],
+                backgroundColor: "#2196F3"
+            }]
+        }
+    });
+}
+
+ambilData();
 </script>
+
 </body>
 </html>
