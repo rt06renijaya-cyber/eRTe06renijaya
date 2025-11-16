@@ -1,152 +1,23 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8" />
-<title>Laporan Keuangan RT</title>
-<script src="https://cdn.tailwindcss.com"></script>
-</head>
-
-<body class="bg-gray-100 p-6">
-
-<h1 class="text-4xl font-bold text-center mb-10">Laporan Keuangan RT</h1>
-
-<!-- SUMMARY BOXES -->
-<div class="grid grid-cols-1 md-grid-cols-3 gap-6 mb-10">
-
-  <div class="bg-white p-6 rounded-2xl shadow text-center">
-    <h3 class="text-gray-600 text-lg">Total Pemasukan</h3>
-    <p id="totalPemasukan" class="text-3xl font-bold text-green-600">Loading...</p>
-  </div>
-
-  <div class="bg-white p-6 rounded-2xl shadow text-center">
-    <h3 class="text-gray-600 text-lg">Total Pengeluaran</h3>
-    <p id="totalPengeluaran" class="text-3xl font-bold text-red-600">Loading...</p>
-  </div>
-
-  <div class="bg-white p-6 rounded-2xl shadow text-center">
-    <h3 class="text-gray-600 text-lg">Saldo</h3>
-    <p id="saldo" class="text-3xl font-bold text-blue-600">Loading...</p>
-  </div>
-
-</div>
-
-<!-- TABLE -->
-<div class="bg-white p-6 rounded-2xl shadow">
-  <h2 class="text-2xl font-bold mb-4">Detail Transaksi</h2>
-
-  <table class="w-full border-collapse overflow-hidden rounded-lg">
-    <thead>
-      <tr class="bg-gray-200 text-gray-700">
-        <th class="p-3 text-left">Tanggal</th>
-        <th class="p-3 text-left">Jenis</th>
-        <th class="p-3 text-left">Jumlah</th>
-        <th class="p-3 text-left">Keterangan</th>
-        <th class="p-3 text-left">Kategori</th>
-      </tr>
-    </thead>
-    <tbody id="tabelData"></tbody>
-  </table>
-</div>
-
-<script>
-// ======================
-// PARSER GOOGLE SHEET + FIX JUMLAH
-// ======================
-async function loadSheet(gid) {
-  const url = `https://docs.google.com/spreadsheets/d/1EMYpie82paCl-vupfhyj11Z9tNGFp2p7aIDwIIl_Z0o/gviz/tq?tqx=out:json&gid=${gid}`;
-
-  const res = await fetch(url);
-  const raw = await res.text();
-
-  // Jika tidak public
-  if (!raw.includes("google.visualization.Query.setResponse")) {
-    alert("ERROR: Google Sheet kamu belum PUBLIC!\n\nUbah Share → Anyone with link → Viewer.");
-    return [];
-  }
-
-  // Buang wrapper JSON Google
-  const clean = raw
-    .replace("/*O_o*/", "")
-    .replace("google.visualization.Query.setResponse(", "")
-    .replace(/\);$/, "")
-    .trim();
-
-  const json = JSON.parse(clean);
-
-  // Convert row
-  return json.table.rows.map(r => {
-    const c = r.c;
-
-    let jumlahRaw = c[1]?.f || c[1]?.v || "0";
-
-    // Bersihkan format jumlah
-    let jumlah = parseInt(
-      String(jumlahRaw)
-        .replace(/[^0-9\-]/g, "")  // Hapus Rp, titik, koma, spasi
-    );
-
-    if (isNaN(jumlah)) jumlah = 0;
-
-    return {
-      tanggal: c[0]?.f || "",
-      jumlah: jumlah,
-      keterangan: c[2]?.v || "",
-      kategori: c[3]?.v || "",
-    };
-  });
-}
-
-// ======================
-// LOAD ALL DATA
-// ======================
-async function start() {
-  const gidPemasukan   = 1722417630;
-  const gidPengeluaran = 683283606;
-
-  const pemasukan   = await loadSheet(gidPemasukan);
-  const pengeluaran = await loadSheet(gidPengeluaran);
-
-  const totalMasuk  = pemasukan.reduce((sum, d) => sum + d.jumlah, 0);
-  const totalKeluar = pengeluaran.reduce((sum, d) => sum + d.jumlah, 0);
-  const saldo       = totalMasuk - totalKeluar;
-
-  document.getElementById("totalPemasukan").innerText  = formatRupiah(totalMasuk);
-  document.getElementById("totalPengeluaran").innerText = formatRupiah(totalKeluar);
-  document.getElementById("saldo").innerText           = formatRupiah(saldo);
-
-  const semua = [
-    ...pemasukan.map(d => ({ ...d, jenis: "Pemasukan" })),
-    ...pengeluaran.map(d => ({ ...d, jenis: "Pengeluaran" }))
-  ];
-
-  // Sort berdasarkan tanggal
-  semua.sort((a, b) => new Date(a.tanggal) - new Date(b.tanggal));
-
-  const tbody = document.getElementById("tabelData");
-  tbody.innerHTML = semua.map(d => `
-    <tr class="border-b hover:bg-gray-100">
-      <td class="p-3">${d.tanggal}</td>
-      <td class="p-3 font-semibold ${d.jenis === 'Pemasukan' ? 'text-green-600' : 'text-red-600'}">${d.jenis}</td>
-      <td class="p-3">${formatRupiah(d.jumlah)}</td>
-      <td class="p-3">${d.keterangan}</td>
-      <td class="p-3">${d.kategori}</td>
-    </tr>
-  `).join("");
-}
-
-// ======================
-// FORMAT RUPIAH
-// ======================
-function formatRupiah(num) {
-  return num.toLocaleString("id-ID", { style: "currency", currency: "IDR" });
-}
-
-// ======================
-// JALANKAN
-// ======================
-start();
-
-</script>
-
-</body>
-</html>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Keuangan RT 06</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h2 { margin-top: 30px; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background: white;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
