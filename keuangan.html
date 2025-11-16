@@ -301,180 +301,244 @@
 </div> <!-- wrap -->
 
 <script>
-/* Responsive Summary — fetch dari OpenSheet */
+/* ================================
+   FETCH DATA • SALDO AWAL • SUMMARY
+   ================================ */
+
 const SHEET_ID = "1EMYpie82paCl-vupfhyj11Z9tNGFp2p7aIDwIIl_Z0o";
 const BASE = "https://opensheet.elk.sh/" + SHEET_ID;
-const URL_IN = BASE + "/web_Pemasukan";
-const URL_OUT = BASE + "/web_Pengeluaran";
-const URL_SUM = BASE + "/web_Summary";
 
-function parseNum(s){
-  if(s==null) return 0;
-  const t = String(s).replace(/[^0-9\-]/g,'');
-  const n = parseInt(t,10);
-  return isNaN(n)?0:n;
+const URL_IN     = BASE + "/web_Pemasukan";
+const URL_OUT    = BASE + "/web_Pengeluaran";
+const URL_SALDO  = BASE + "/web_SaldoAwal";  // NEW
+
+/* ----------- Helpers ----------- */
+
+function parseNum(v){
+  if(v==null) return 0;
+  const cleaned = String(v).replace(/[^0-9\-]/g,"");
+  const n = parseInt(cleaned,10);
+  return isNaN(n) ? 0 : n;
 }
-function fmt(n){ return n.toLocaleString('id-ID',{style:'currency',currency:'IDR'}); }
+
+function fmt(n){
+  return n.toLocaleString("id-ID",{style:"currency",currency:"IDR"});
+}
 
 async function fetchJSON(url){
-  try{
+  try {
     const r = await fetch(url);
     if(!r.ok) throw new Error(r.status);
     return await r.json();
-  }catch(e){
-    console.warn("fetch err",url,e);
+  } catch (e){
+    console.warn("Fetch error:", url, e);
     return null;
   }
 }
 
+/* ----------- MAIN ----------- */
+
 async function init(){
-  const [inData,outData,summary] = await Promise.all([
-    fetchJSON(URL_IN), fetchJSON(URL_OUT), fetchJSON(URL_SUM)
+
+  const [inData, outData, saldoSheet] = await Promise.all([
+    fetchJSON(URL_IN),
+    fetchJSON(URL_OUT),
+    fetchJSON(URL_SALDO)
   ]);
 
-  const pemasukan = Array.isArray(inData)?inData:[];
-  const pengeluaran = Array.isArray(outData)?outData:[];
+  const pemasukan   = Array.isArray(inData) ? inData : [];
+  const pengeluaran = Array.isArray(outData) ? outData : [];
 
-  // total
-  let totalIn=0,totalOut=0;
-  pemasukan.forEach(r=> totalIn += parseNum(r.Jumlah || r.Amount || 0));
-  pengeluaran.forEach(r=> totalOut += parseNum(r.Jumlah || r.Amount || 0));
+  /* ==========================
+        1. SALDO AWAL
+     ========================== */
 
-  // planned/actual
-  let plannedIn=0, plannedOut=0, actualIn=totalIn, actualOut=totalOut;
-  if(Array.isArray(summary) && summary.length>0){
-    summary.forEach(r=>{
-      const type = (r.Type || "").toLowerCase();
-      const p = parseNum(r.Planned || 0);
-      const a = parseNum(r.Actual || 0);
-      if(type.includes('masuk') || type.includes('in')){
-        plannedIn += p; actualIn += a;
-      } else if(type.includes('keluar') || type.includes('out')){
-        plannedOut += p; actualOut += a;
-      }
-    });
-    if(plannedIn===0) plannedIn=actualIn;
-    if(plannedOut===0) plannedOut=actualOut;
-  }else{
-    plannedIn = actualIn;
-    plannedOut = actualOut;
-  }
-
-  // saldo awal
   let saldoAwal = 0;
-  if(Array.isArray(summary)){
-    summary.forEach(r=>{
-      if(r.SaldoAwal || r["Saldo Awal"]) saldoAwal = parseNum(r.SaldoAwal || r["Saldo Awal"]);
-    });
-  }
 
-  const net = totalIn-totalOut;
-  const saldoAkhir = saldoAwal + net;
+  if(Array.isArray(saldoSheet) && saldoSheet.length > 0){
 
-  // percent
-  let pct = saldoAwal!==0 ?
-    Math.round((saldoAkhir - saldoAwal)/Math.abs(saldoAwal)*100) :
-    (net===0 ? 0 : Math.round(net / Math.max(1,totalIn)*100));
+    const row = saldoSheet[0];
 
-  document.getElementById("saldoAwalUI").innerText = fmt(saldoAwal);
-  document.getElementById("saldoAkhirUI").innerText = fmt(saldoAkhir);
-  document.getElementById("percentChange").innerText = (pct>0?'+':'') + pct + '%';
-  document.getElementById("changeDesc").innerText = pct>0 ? 'Increase in total savings':'Decrease in total savings';
-  document.getElementById("spentThis").innerText = fmt(Math.abs(net));
+    // TRY key common names
+    const possibleNames = [
+      "SaldoAwal","Saldo Awal","saldoawal","saldo_awal",
+      "Saldo","Initial","Start","Awal"
+    ];
 
-  // planned/actual
-  document.getElementById("plannedOut").innerText = fmt(plannedOut);
-  document.getElementById("actualOut").innerText = fmt(actualOut);
-  document.getElementById("plannedOutSmall").innerText = fmt(plannedOut);
-  document.getElementById("actualOutSmall").innerText = fmt(actualOut);
-
-  const outPct = plannedOut>0 ? Math.min(100, Math.round(actualOut/plannedOut*100)) : 100;
-  document.getElementById("fillOut").style.width = outPct + "%";
-
-  document.getElementById("plannedIn").innerText = fmt(plannedIn);
-  document.getElementById("actualIn").innerText = fmt(actualIn);
-  document.getElementById("plannedInSmall").innerText = fmt(plannedIn);
-  document.getElementById("actualInSmall").innerText = fmt(actualIn);
-
-  const inPct = plannedIn>0? Math.min(100, Math.round(actualIn/plannedIn*100)) : 100;
-  document.getElementById("fillIn").style.width = inPct + "%";
-
-  // bars scaling
-  const maxBar = Math.max(Math.abs(saldoAwal), Math.abs(saldoAkhir), 1);
-  const barAw = Math.round((Math.abs(saldoAwal) / maxBar) * 120) + 20;
-  const barAk = Math.round((Math.abs(saldoAkhir) / maxBar) * 120) + 20;
-
-  document.getElementById("barAwal").style.height = barAw + "px";
-  document.getElementById("barAkhir").style.height = barAk + "px";
-
-  // tables
-  const tbodyOut = document.querySelector("#tableOut tbody");
-  const tbodyIn = document.querySelector("#tableIn tbody");
-  tbodyOut.innerHTML=''; tbodyIn.innerHTML='';
-
-  function parseDate(d){
-    if(!d) return new Date(0);
-    const s = String(d).trim();
-    if(/\d{1,2}\/\d{1,2}\/\d{2,4}/.test(s)){
-      const p=s.split('/'); 
-      let day=p[0], month=p[1], year=p[2];
-      if(year.length===2) year='20'+year;
-      return new Date(`${year}-${month.padStart(2,'0')}-${day.padStart(2,'0')}`);
+    for(const key of Object.keys(row)){
+      const cleanKey = key.toLowerCase().replace(/\s+/g,'');
+      if(possibleNames.map(s=>s.toLowerCase().replace(/\s+/g,'')).includes(cleanKey)){
+        saldoAwal = parseNum(row[key]);
+        break;
+      }
     }
-    const dt=new Date(s);
-    return isNaN(dt.getTime()) ? new Date(0) : dt;
+
+    // Fallback → first numeric value in row
+    if(saldoAwal === 0){
+      for(const key of Object.keys(row)){
+        const v = parseNum(row[key]);
+        if(v !== 0){ saldoAwal = v; break; }
+      }
+    }
   }
 
-  pengeluaran.sort((a,b)=> parseDate(a.Tanggal) - parseDate(b.Tanggal));
-  pemasukan.sort((a,b)=> parseDate(a.Tanggal) - parseDate(b.Tanggal));
+  /* ==========================
+        2. HITUNG PEMASUKAN / PENGELUARAN
+     ========================== */
+
+  let totalIn  = 0;
+  let totalOut = 0;
+
+  pemasukan.forEach(r=>{
+    totalIn += parseNum(r.Jumlah || r.Nominal || r.Amount || 0);
+  });
 
   pengeluaran.forEach(r=>{
-    const tr = document.createElement('tr');
+    totalOut += parseNum(r.Jumlah || r.Nominal || r.Amount || 0);
+  });
+
+  // Planned = Actual (karena tidak pakai web_Summary)
+  const plannedIn  = totalIn;
+  const plannedOut = totalOut;
+  const actualIn   = totalIn;
+  const actualOut  = totalOut;
+
+  /* ==========================
+        3. HITUNG SALDO AKHIR
+     ========================== */
+
+  const net = totalIn - totalOut;
+  const saldoAkhir = saldoAwal + net;
+
+  let pct = 0;
+  if(saldoAwal !== 0){
+    pct = Math.round((saldoAkhir - saldoAwal)/Math.abs(saldoAwal) * 100);
+  } else {
+    pct = net === 0 ? 0 : Math.round(net / Math.max(1,totalIn) * 100);
+  }
+
+  /* ==========================
+        4. UPDATE UI SUMMARY
+     ========================== */
+
+  const set = (id,val)=>{ document.getElementById(id).innerText = val; };
+
+  set("saldoAwalUI", fmt(saldoAwal));
+  set("saldoAkhirUI", fmt(saldoAkhir));
+
+  set("percentChange", (pct>0?"+":"") + pct + "%");
+  set("changeDesc", pct>0 ? "Increase in total savings" : "Decrease in total savings");
+
+  set("spentThis", fmt(Math.abs(net)));
+
+  /* --- Planned vs Actual --- */
+
+  set("plannedOut", fmt(plannedOut));
+  set("actualOut", fmt(actualOut));
+  set("plannedOutSmall", fmt(plannedOut));
+  set("actualOutSmall", fmt(actualOut));
+
+  set("plannedIn", fmt(plannedIn));
+  set("actualIn", fmt(actualIn));
+  set("plannedInSmall", fmt(plannedIn));
+  set("actualInSmall", fmt(actualIn));
+
+  document.getElementById("fillOut").style.width =
+    (plannedOut>0 ? Math.min(100, Math.round(actualOut/plannedOut*100)) : 100) + "%";
+
+  document.getElementById("fillIn").style.width =
+    (plannedIn>0 ? Math.min(100, Math.round(actualIn/plannedIn*100)) : 100) + "%";
+
+  /* ==========================
+        5. UPDATE BARS
+     ========================== */
+
+  const maxBar = Math.max(Math.abs(saldoAwal), Math.abs(saldoAkhir), 1);
+
+  document.getElementById("barAwal").style.height =
+    (Math.round((Math.abs(saldoAwal)/maxBar)*120)+20) + "px";
+
+  document.getElementById("barAkhir").style.height =
+    (Math.round((Math.abs(saldoAkhir)/maxBar)*120)+20) + "px";
+
+  /* ==========================
+        6. TABLES
+     ========================== */
+
+  const tbodyOut = document.querySelector("#tableOut tbody");
+  const tbodyIn  = document.querySelector("#tableIn tbody");
+
+  tbodyOut.innerHTML = "";
+  tbodyIn.innerHTML  = "";
+
+  function safeDate(d){
+    if(!d) return new Date(0);
+    const s = String(d).trim();
+
+    // DD/MM/YYYY
+    const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+    if(m){
+      let dd=m[1], mm=m[2], yy=m[3];
+      if(yy.length===2) yy="20"+yy;
+      return new Date(`${yy}-${mm.padStart(2,"0")}-${dd.padStart(2,"0")}`);
+    }
+
+    const dt = new Date(s);
+    return isNaN(dt) ? new Date(0) : dt;
+  }
+
+  pengeluaran.sort((a,b)=> safeDate(a.Tanggal) - safeDate(b.Tanggal));
+  pemasukan.sort((a,b)=> safeDate(a.Tanggal) - safeDate(b.Tanggal));
+
+  pengeluaran.forEach(r=>{
+    const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>${r.Tanggal||""}</td>
-      <td>${fmt(parseNum(r.Jumlah||0))}</td>
+      <td>${fmt(parseNum(r.Jumlah))}</td>
       <td>${r.Keterangan||""}</td>
       <td>${r.Kategori||""}</td>`;
     tbodyOut.appendChild(tr);
   });
 
   pemasukan.forEach(r=>{
-    const tr = document.createElement('tr');
+    const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>${r.Tanggal||""}</td>
-      <td>${fmt(parseNum(r.Jumlah||0))}</td>
+      <td>${fmt(parseNum(r.Jumlah))}</td>
       <td>${r.Keterangan||""}</td>
       <td>${r.Kategori||""}</td>`;
     tbodyIn.appendChild(tr);
   });
 
-  // donut chart
-  const donutWrap = document.getElementById("donutWrap");
-  donutWrap.innerHTML = "";
-  const canvas = document.createElement("canvas");
-  donutWrap.appendChild(canvas);
+  /* ==========================
+        7. DONUT CHART
+     ========================== */
 
-  new Chart(canvas, {
-    type:'doughnut',
+  const wrap = document.getElementById("donutWrap");
+  wrap.innerHTML = "";
+  const canvas = document.createElement("canvas");
+  wrap.appendChild(canvas);
+
+  new Chart(canvas,{
+    type:"doughnut",
     data:{
-      labels:['Pemasukan','Pengeluaran'],
+      labels:["Pemasukan","Pengeluaran"],
       datasets:[{
         data:[totalIn,totalOut],
-        backgroundColor:['#1f6feb','#e76f51']
+        backgroundColor:["#1f6feb","#e76f51"]
       }]
     },
     options:{
       responsive:true,
       maintainAspectRatio:false,
-      plugins:{legend:{position:'bottom'}}
+      plugins:{ legend:{ position:"bottom" } }
     }
   });
 
-} // init
+} // END INIT
 
 init();
 </script>
 
 </body>
 </html>
-
