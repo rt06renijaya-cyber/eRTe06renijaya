@@ -1,203 +1,480 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Keuangan RT 06</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Laporan Keuangan RT 06 — Responsive</title>
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root{
+    --primary:#1f6feb;
+    --accent:#e76f51;
+    --muted:#6b7280;
+    --bg:#f6f7fb;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+    background:var(--bg);color:#0f172a;-webkit-font-smoothing:antialiased;
+  }
 
-    <style>
+  /* container */
+  .wrap{max-width:1100px;margin:18px auto;padding:0 16px;}
 
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: 'Inter', sans-serif;
-        background: #f5f8fc;
-        color: #333;
+  /* header */
+  header.site{
+    background:#16324a;color:#fff;padding:18px;border-radius:10px;
+    display:flex;gap:12px;align-items:center;
+  }
+  .logo{width:64px;height:64px;border-radius:8px;background:center/cover no-repeat url('logo_rt06.png');flex:0 0 64px}
+  .hdr-text h1{margin:0;font-size:20px;font-weight:700;line-height:1.25}
+  .hdr-text p{margin:4px 0 0;font-size:12px;color:#dbeafe}
+
+  /* report title */
+  .report-title{ text-align:center;margin:18px 0 10px;}
+  .report-title h2{margin:0;color:var(--accent);font-size:22px;font-weight:700}
+  .report-title p{margin:6px 0 0;color:var(--muted);font-weight:600}
+
+  /* top grid */
+  .top-grid{
+    display:grid;grid-template-columns:420px 1fr;gap:18px;align-items:start;
+    margin-bottom:18px;
+  }
+  .card{background:var(--card);padding:16px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.06)}
+  .kpi{font-weight:700;font-size:20px;color:#0f172a}
+
+  /* bars & summary */
+  .saldo-wrap{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+  .bars{width:180px;display:flex;justify-content:center;gap:16px;align-items:end;height:150px;margin:0 auto}
+  .bar{width:60px;border-radius:8px 8px 0 0;display:flex;align-items:flex-end;justify-content:center;color:#fff;font-weight:700;font-size:10px;padding-bottom:4px}
+  .bar-left{background:#2b6b93}
+  .bar-right{background:var(--accent)}
+  .bars-label{margin-top:8px;text-align:center;color:var(--muted);font-weight:700;font-size:12px}
+
+  .summary-stat{background:#f8fafc;border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px;width:100%}
+  .percent{font-size:18px;font-weight:700}
+  .spent{font-weight:700;font-size:22px}
+
+  /* planned/actual bars */
+  .pl-actual{display:flex;gap:12px;align-items:center;margin-top:12px}
+  .pl-actual .label{width:80px;color:var(--muted);font-size:13px}
+  .plbar{flex:1;height:12px;border-radius:8px;background:#eef3ff;overflow:hidden}
+  .plfill{height:100%;background:linear-gradient(90deg,var(--primary),#60a5fa);width:40%}
+
+  .mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+  .mini-col{background:#fff;padding:10px;border-radius:8px;text-align:center;box-shadow:0 6px 16px rgba(2,6,23,0.03)}
+
+  /* tables */
+  .section{margin-top:16px}
+  .table-wrap{overflow-x:auto;border-radius:8px}
+  table{width:100%;border-collapse:collapse;font-size:13px;background:var(--card)}
+  th,td{padding:10px;border-bottom:1px solid #f1f5f9;text-align:left;white-space:nowrap}
+  th{background:#f8fafc;font-weight:700;color:#111827}
+  tr:hover td{background:#fbfdff}
+
+  /* donut chart container */
+  #donutWrap canvas{
+    width:100%!important;
+    max-width:380px;
+    display:block;
+    margin:0 auto;
+  }
+
+  footer{margin:24px 0;text-align:center;color:var(--muted);font-size:13px}
+
+  /* RESPONSIVE AREA — IMPROVED VERSION */
+
+  /* Tablet */
+  @media (max-width:980px){
+    .top-grid{grid-template-columns:1fr; }
+    header.site{padding:14px}
+    .hdr-text h1{font-size:18px}
+  }
+
+  /* HP / Small Devices */
+  @media (max-width:520px){
+
+    .wrap{padding:0 10px;margin:12px auto}
+
+    header.site{
+      flex-direction:row;
+      padding:14px;
+      gap:10px;
     }
+    .logo{width:52px;height:52px}
+    .hdr-text h1{font-size:15px}
+    .hdr-text p{font-size:11px}
 
-    .container {
-        max-width: 900px;
-        margin: auto;
-        padding: 16px;
-    }
+    .report-title h2{font-size:18px}
+    .report-title p{font-size:13px}
 
-    .card {
-        background: white;
-        border-radius: 16px;
-        padding: 18px;
-        margin-bottom: 20px;
-        box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
-    }
+    .bars{height:110px;width:140px}
+    .bar{width:38px;font-size:9px}
+    .kpi{font-size:17px}
+    .percent{font-size:16px}
+    .spent{font-size:18px}
 
-    h2 {
-        font-size: 20px;
-        text-align: center;
-        margin: 0 0 16px;
-        font-weight: 700;
-        color: #2c3e50;
-    }
+    .pl-actual .label{width:64px;font-size:11px}
+    th,td{padding:8px;font-size:12px}
+    .mini-grid{grid-template-columns:1fr}
 
-    /* CHART RESPONSIVE */
-    .chart-container {
-        width: 100%;
-        height: 320px;
-        position: relative;
-    }
+    table th, table td{white-space:normal}
+  }
 
-    canvas {
-        width: 100% !important;
-        height: 100% !important;
-    }
+  /* Extra small (≤380px) */
+  @media (max-width:380px){
+    header.site{flex-direction:column;text-align:center}
+    .logo{margin-bottom:8px}
+    .bars{width:120px;height:100px}
+    .bar{width:34px}
+  }
 
-    /* =======================
-       MOBILE (<480px)
-    =========================*/
-    @media (max-width: 480px) {
-
-        .container {
-            padding: 10px;
-        }
-
-        h2 {
-            font-size: 16px;
-        }
-
-        .card {
-            padding: 14px;
-            border-radius: 14px;
-        }
-
-        .chart-container {
-            height: 220px !important; /* ukuran ideal di HP */
-        }
-
-        .chart-container canvas {
-            height: 220px !important;
-        }
-
-        body {
-            font-size: 13px;
-        }
-    }
-    </style>
+</style>
 </head>
-
 <body>
 
-<div class="container">
+<div class="wrap">
 
+  <header class="site card" aria-hidden="false">
+    <div class="logo" role="img" aria-label="logo"></div>
+    <div class="hdr-text">
+      <h1>RUKUN TETANGGA 06/06 — Reni Jaya</h1>
+      <p>Kel. Pondok Benda • Kecamatan Pamulang • Kota Tangerang Selatan</p>
+    </div>
+  </header>
+
+  <div class="report-title">
+    <h2>LAPORAN KEUANGAN</h2>
+    <p>Oktober 2025</p>
+  </div>
+
+  <div class="top-grid">
+
+    <!-- LEFT: SALDO + BARS -->
     <div class="card">
-        <h2>Grafik Pemasukan & Pengeluaran per Kategori</h2>
-        <div class="chart-container">
-            <canvas id="kategoriChart"></canvas>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <div>
+          <div style="font-size:12px;color:var(--muted)">SALDO AWAL</div>
+          <div class="kpi" id="saldoAwalUI">Rp0</div>
         </div>
+        <div style="text-align:right">
+          <div style="font-size:12px;color:var(--muted)">SALDO AKHIR</div>
+          <div class="kpi" id="saldoAkhirUI">Rp0</div>
+        </div>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <div class="saldo-wrap">
+        <div class="bars" id="barsWrap">
+          <div style="text-align:center">
+            <div class="bar bar-left" id="barAwal" style="height:100px"></div>
+            <div class="bars-label">SALDO AWAL</div>
+          </div>
+          <div style="text-align:center">
+            <div class="bar bar-right" id="barAkhir" style="height:100px"></div>
+            <div class="bars-label">SALDO AKHIR</div>
+          </div>
+        </div>
+
+        <div style="flex:1;min-width:180px">
+          <div class="summary-stat">
+            <div class="percent" id="percentChange">0%</div>
+            <div class="desc" id="changeDesc">No change</div>
+            <div style="height:8px"></div>
+            <div class="spent" id="spentThis">Rp0</div>
+            <div style="color:var(--muted);font-size:13px">Spent this month</div>
+          </div>
+        </div>
+      </div>
     </div>
 
-</div>
+    <!-- RIGHT: PLANNED / ACTUAL -->
+    <div>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+          <div>
+            <h3 style="margin:0">Pengeluaran</h3>
+            <div style="color:var(--muted);font-size:13px">Planned vs Actual</div>
+          </div>
+          <div style="text-align:right">
+            <div style="color:var(--muted);font-size:13px">Planned</div>
+            <div id="plannedOut" class="kpi">Rp0</div>
+            <div style="height:8px"></div>
+            <div style="color:var(--muted);font-size:13px">Actual</div>
+            <div id="actualOut" class="kpi">Rp0</div>
+          </div>
+        </div>
+
+        <div class="pl-actual">
+          <div class="label">Progress</div>
+          <div class="plbar"><div id="fillOut" class="plfill" style="width:40%"></div></div>
+        </div>
+
+        <div class="mini-grid">
+          <div class="mini-col">
+            <div style="font-size:12px;color:var(--muted)">Planned</div>
+            <div id="plannedOutSmall" style="font-weight:700;margin-top:8px">Rp0</div>
+          </div>
+          <div class="mini-col">
+            <div style="font-size:12px;color:var(--muted)">Actual</div>
+            <div id="actualOutSmall" style="font-weight:700;margin-top:8px">Rp0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+          <div>
+            <h3 style="margin:0">Pemasukan</h3>
+            <div style="color:var(--muted);font-size:13px">Planned vs Actual</div>
+          </div>
+          <div style="text-align:right">
+            <div style="color:var(--muted);font-size:13px">Planned</div>
+            <div id="plannedIn" class="kpi">Rp0</div>
+            <div style="height:8px"></div>
+            <div style="color:var(--muted);font-size:13px">Actual</div>
+            <div id="actualIn" class="kpi">Rp0</div>
+          </div>
+        </div>
+
+        <div class="pl-actual">
+          <div class="label">Progress</div>
+          <div class="plbar"><div id="fillIn" class="plfill" style="width:60%"></div></div>
+        </div>
+
+        <div class="mini-grid">
+          <div class="mini-col">
+            <div style="font-size:12px;color:var(--muted)">Planned</div>
+            <div id="plannedInSmall" style="font-weight:700;margin-top:8px">Rp0</div>
+          </div>
+          <div class="mini-col">
+            <div style="font-size:12px;color:var(--muted)">Actual</div>
+            <div id="actualInSmall" style="font-weight:700;margin-top:8px">Rp0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div> <!-- end top-grid -->
+
+  <!-- donut chart -->
+  <div id="donutWrap" style="margin-top:10px;margin-bottom:18px"></div>
+
+  <!-- Tables -->
+  <div class="section">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+        <h3 style="margin:0">Pengeluaran</h3>
+        <div style="color:var(--muted);font-size:13px">Detail transaksi</div>
+      </div>
+
+      <div class="table-wrap" style="margin-top:12px">
+        <table id="tableOut">
+          <thead><tr><th>Tanggal</th><th>Jumlah</th><th>Keterangan</th><th>Kategori</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+        <h3 style="margin:0">Pemasukan</h3>
+        <div style="color:var(--muted);font-size:13px">Detail transaksi</div>
+      </div>
+
+      <div class="table-wrap" style="margin-top:12px">
+        <table id="tableIn">
+          <thead><tr><th>Tanggal</th><th>Jumlah</th><th>Keterangan</th><th>Kategori</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer>Generated from Google Sheets — RT06 Reni Jaya</footer>
+</div> <!-- wrap -->
 
 <script>
-const SHEET_URL_PEMASUKAN =
- "https://opensheet.elk.sh/1EMYpie82paCl-vupfhyj11Z9tNGFp2p7aIDwIIl_Z0o/web_Pemasukan";
+/* Responsive Summary — fetch dari OpenSheet */
+const SHEET_ID = "1EMYpie82paCl-vupfhyj11Z9tNGFp2p7aIDwIIl_Z0o";
+const BASE = "https://opensheet.elk.sh/" + SHEET_ID;
+const URL_IN = BASE + "/web_Pemasukan";
+const URL_OUT = BASE + "/web_Pengeluaran";
+const URL_SUM = BASE + "/web_Summary";
 
-const SHEET_URL_PENGELUARAN =
- "https://opensheet.elk.sh/1EMYpie82paCl-vupfhyj11Z9tNGFp2p7aIDwIIl_Z0o/web_Pengeluaran";
+function parseNum(s){
+  if(s==null) return 0;
+  const t = String(s).replace(/[^0-9\-]/g,'');
+  const n = parseInt(t,10);
+  return isNaN(n)?0:n;
+}
+function fmt(n){ return n.toLocaleString('id-ID',{style:'currency',currency:'IDR'}); }
 
-async function ambilData() {
-    const [pemasukanRes, pengeluaranRes] = await Promise.all([
-        fetch(SHEET_URL_PEMASUKAN),
-        fetch(SHEET_URL_PENGELUARAN)
-    ]);
-
-    const pemasukan = await pemasukanRes.json();
-    const pengeluaran = await pengeluaranRes.json();
-
-    const totalMasuk = {};
-    const totalKeluar = {};
-
-    pemasukan.forEach(row => {
-        const kategori = row.Kategori?.trim();
-        const nominal = parseInt(row.Nominal || "0");
-        if (kategori) totalMasuk[kategori] = (totalMasuk[kategori] || 0) + nominal;
-    });
-
-    pengeluaran.forEach(row => {
-        const kategori = row.Kategori?.trim();
-        const nominal = parseInt(row.Nominal || "0");
-        if (kategori) totalKeluar[kategori] = (totalKeluar[kategori] || 0) + nominal;
-    });
-
-    const semuaKategori = Array.from(new Set([
-        ...Object.keys(totalMasuk),
-        ...Object.keys(totalKeluar)
-    ])).sort();
-
-    const dataMasuk = semuaKategori.map(k => totalMasuk[k] || 0);
-    const dataKeluar = semuaKategori.map(k => totalKeluar[k] || 0);
-
-    buatChart(semuaKategori, dataMasuk, dataKeluar);
+async function fetchJSON(url){
+  try{
+    const r = await fetch(url);
+    if(!r.ok) throw new Error(r.status);
+    return await r.json();
+  }catch(e){
+    console.warn("fetch err",url,e);
+    return null;
+  }
 }
 
-function buatChart(labels, masuk, keluar) {
-    const ctx = document.getElementById("kategoriChart");
+async function init(){
+  const [inData,outData,summary] = await Promise.all([
+    fetchJSON(URL_IN), fetchJSON(URL_OUT), fetchJSON(URL_SUM)
+  ]);
 
-    new Chart(ctx, {
-        type: "line",
-        data: {
-            labels: labels,
-            datasets: [
-                {
-                    label: "Pemasukan",
-                    data: masuk,
-                    borderColor: "#2ecc71",
-                    backgroundColor: "rgba(46,204,113,0.18)",
-                    borderWidth: 3,
-                    tension: 0.4,
-                    pointRadius: 3
-                },
-                {
-                    label: "Pengeluaran",
-                    data: keluar,
-                    borderColor: "#e74c3c",
-                    backgroundColor: "rgba(231,76,60,0.18)",
-                    borderWidth: 3,
-                    tension: 0.4,
-                    pointRadius: 3
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { position: "top" }
-            },
-            scales: {
-                x: {
-                    ticks: {
-                        maxRotation: 60,
-                        minRotation: 0,
-                        font: { size: 10 }   // lebih kecil di HP
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        font: { size: 10 }   // lebih kecil
-                    }
-                }
-            }
-        }
+  const pemasukan = Array.isArray(inData)?inData:[];
+  const pengeluaran = Array.isArray(outData)?outData:[];
+
+  // total
+  let totalIn=0,totalOut=0;
+  pemasukan.forEach(r=> totalIn += parseNum(r.Jumlah || r.Amount || 0));
+  pengeluaran.forEach(r=> totalOut += parseNum(r.Jumlah || r.Amount || 0));
+
+  // planned/actual
+  let plannedIn=0, plannedOut=0, actualIn=totalIn, actualOut=totalOut;
+  if(Array.isArray(summary) && summary.length>0){
+    summary.forEach(r=>{
+      const type = (r.Type || "").toLowerCase();
+      const p = parseNum(r.Planned || 0);
+      const a = parseNum(r.Actual || 0);
+      if(type.includes('masuk') || type.includes('in')){
+        plannedIn += p; actualIn += a;
+      } else if(type.includes('keluar') || type.includes('out')){
+        plannedOut += p; actualOut += a;
+      }
     });
-}
+    if(plannedIn===0) plannedIn=actualIn;
+    if(plannedOut===0) plannedOut=actualOut;
+  }else{
+    plannedIn = actualIn;
+    plannedOut = actualOut;
+  }
 
-ambilData();
+  // saldo awal
+  let saldoAwal = 0;
+  if(Array.isArray(summary)){
+    summary.forEach(r=>{
+      if(r.SaldoAwal || r["Saldo Awal"]) saldoAwal = parseNum(r.SaldoAwal || r["Saldo Awal"]);
+    });
+  }
+
+  const net = totalIn-totalOut;
+  const saldoAkhir = saldoAwal + net;
+
+  // percent
+  let pct = saldoAwal!==0 ?
+    Math.round((saldoAkhir - saldoAwal)/Math.abs(saldoAwal)*100) :
+    (net===0 ? 0 : Math.round(net / Math.max(1,totalIn)*100));
+
+  document.getElementById("saldoAwalUI").innerText = fmt(saldoAwal);
+  document.getElementById("saldoAkhirUI").innerText = fmt(saldoAkhir);
+  document.getElementById("percentChange").innerText = (pct>0?'+':'') + pct + '%';
+  document.getElementById("changeDesc").innerText = pct>0 ? 'Increase in total savings':'Decrease in total savings';
+  document.getElementById("spentThis").innerText = fmt(Math.abs(net));
+
+  // planned/actual
+  document.getElementById("plannedOut").innerText = fmt(plannedOut);
+  document.getElementById("actualOut").innerText = fmt(actualOut);
+  document.getElementById("plannedOutSmall").innerText = fmt(plannedOut);
+  document.getElementById("actualOutSmall").innerText = fmt(actualOut);
+
+  const outPct = plannedOut>0 ? Math.min(100, Math.round(actualOut/plannedOut*100)) : 100;
+  document.getElementById("fillOut").style.width = outPct + "%";
+
+  document.getElementById("plannedIn").innerText = fmt(plannedIn);
+  document.getElementById("actualIn").innerText = fmt(actualIn);
+  document.getElementById("plannedInSmall").innerText = fmt(plannedIn);
+  document.getElementById("actualInSmall").innerText = fmt(actualIn);
+
+  const inPct = plannedIn>0? Math.min(100, Math.round(actualIn/plannedIn*100)) : 100;
+  document.getElementById("fillIn").style.width = inPct + "%";
+
+  // bars scaling
+  const maxBar = Math.max(Math.abs(saldoAwal), Math.abs(saldoAkhir), 1);
+  const barAw = Math.round((Math.abs(saldoAwal) / maxBar) * 120) + 20;
+  const barAk = Math.round((Math.abs(saldoAkhir) / maxBar) * 120) + 20;
+
+  document.getElementById("barAwal").style.height = barAw + "px";
+  document.getElementById("barAkhir").style.height = barAk + "px";
+
+  // tables
+  const tbodyOut = document.querySelector("#tableOut tbody");
+  const tbodyIn = document.querySelector("#tableIn tbody");
+  tbodyOut.innerHTML=''; tbodyIn.innerHTML='';
+
+  function parseDate(d){
+    if(!d) return new Date(0);
+    const s = String(d).trim();
+    if(/\d{1,2}\/\d{1,2}\/\d{2,4}/.test(s)){
+      const p=s.split('/'); 
+      let day=p[0], month=p[1], year=p[2];
+      if(year.length===2) year='20'+year;
+      return new Date(`${year}-${month.padStart(2,'0')}-${day.padStart(2,'0')}`);
+    }
+    const dt=new Date(s);
+    return isNaN(dt.getTime()) ? new Date(0) : dt;
+  }
+
+  pengeluaran.sort((a,b)=> parseDate(a.Tanggal) - parseDate(b.Tanggal));
+  pemasukan.sort((a,b)=> parseDate(a.Tanggal) - parseDate(b.Tanggal));
+
+  pengeluaran.forEach(r=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${r.Tanggal||""}</td>
+      <td>${fmt(parseNum(r.Jumlah||0))}</td>
+      <td>${r.Keterangan||""}</td>
+      <td>${r.Kategori||""}</td>`;
+    tbodyOut.appendChild(tr);
+  });
+
+  pemasukan.forEach(r=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${r.Tanggal||""}</td>
+      <td>${fmt(parseNum(r.Jumlah||0))}</td>
+      <td>${r.Keterangan||""}</td>
+      <td>${r.Kategori||""}</td>`;
+    tbodyIn.appendChild(tr);
+  });
+
+  // donut chart
+  const donutWrap = document.getElementById("donutWrap");
+  donutWrap.innerHTML = "";
+  const canvas = document.createElement("canvas");
+  donutWrap.appendChild(canvas);
+
+  new Chart(canvas, {
+    type:'doughnut',
+    data:{
+      labels:['Pemasukan','Pengeluaran'],
+      datasets:[{
+        data:[totalIn,totalOut],
+        backgroundColor:['#1f6feb','#e76f51']
+      }]
+    },
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom'}}
+    }
+  });
+
+} // init
+
+init();
 </script>
 
 </body>
 </html>
+
