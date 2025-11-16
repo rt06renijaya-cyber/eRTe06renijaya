@@ -1,140 +1,245 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Form Laporan Masalah - RT 06 Reni Jaya</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: #eef3f2;
-            color: #333;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laporan Permasalahan - RT 06 Reni Jaya</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: "Poppins", sans-serif;
+        background: #f4f7f6;
+    }
+
+    .header {
+        background: #004d40;
+        color: white;
+        padding: 30px 20px;
+        text-align: center;
+        border-bottom-left-radius: 12px;
+        border-bottom-right-radius: 12px;
+    }
+
+    .header img {
+        width: 110px;
+        border-radius: 50%;
+        border: 4px solid white;
+        margin-bottom: 10px;
+    }
+
+    .container {
+        max-width: 600px;
+        margin: 20px auto;
+        background: white;
+        padding: 25px;
+        border-radius: 14px;
+        box-shadow: 0 4px 18px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #004d40;
+        font-weight: 600;
+    }
+
+    .field {
+        margin-bottom: 18px;
+    }
+
+    .label {
+        font-weight: 500;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #004d40;
+    }
+
+    .label i {
+        font-size: 18px;
+        color: #00897b;
+    }
+
+    input, select, textarea {
+        width: 100%;
+        padding: 12px 14px;
+        border: 2px solid #c8e6c9;
+        border-radius: 10px;
+        font-size: 15px;
+        outline: none;
+        transition: 0.25s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+        border-color: #26a69a;
+        box-shadow: 0 0 6px rgba(38,166,154,0.25);
+    }
+
+    textarea {
+        height: 120px;
+        resize: vertical;
+    }
+
+    #preview {
+        width: 100%;
+        margin-top: 10px;
+        display: none;
+        border-radius: 10px;
+    }
+
+    button {
+        width: 100%;
+        padding: 14px;
+        background: #00796b;
+        border: none;
+        color: white;
+        font-size: 16px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: 0.2s;
+    }
+
+    button:hover {
+        background: #00695c;
+        transform: translateY(-2px);
+    }
+
+    .loading {
+        display: none;
+        text-align: center;
+        margin-top: 15px;
+        font-weight: 500;
+        color: #004d40;
+    }
+
+    @media (max-width: 480px) {
         .container {
-            max-width: 600px;
-            margin: 30px auto;
-            background: #fff;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 10px;
+            padding: 18px;
         }
+        
         h2 {
-            text-align: center;
-            color: #004d40;
+            font-size: 20px;
         }
-        label {
-            font-weight: bold;
-        }
-        input, textarea, select {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        button {
-            background: #dc3545;
-            color: #fff;
-            border: none;
-            padding: 12px;
-            width: 100%;
-            border-radius: 6px;
-            font-size: 1rem;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #b52d3a;
-        }
-        .success-box {
-            display: none;
-            background: #d4edda;
-            color: #155724;
-            padding: 12px;
-            border-left: 5px solid #28a745;
-            margin-bottom: 20px;
-            border-radius: 5px;
-        }
-        .back-link {
-            display: block;
-            text-align: center;
-            margin-top: 15px;
-            color: #004d40;
-            text-decoration: none;
-            font-weight: bold;
-        }
-    </style>
+    }
+</style>
+
+<!-- ICON PACK -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
 <body>
-    <div class="container">
-        <h2>Form Laporan Permasalahan Lingkungan</h2>
-        <div id="success" class="success-box">Laporan berhasil dikirim! Terima kasih atas partisipasi Anda.</div>
 
-        <form id="laporanForm">
-            <label>Nama Pelapor</label>
-            <input type="text" name="nama" required />
+<div class="header">
+    <img src="images/logo_rt06.png" alt="Logo RT 06">
+    <h1>Laporan Permasalahan Lingkungan</h1>
+    <p>Gunakan form ini untuk melaporkan masalah keamanan, kebersihan, fasilitas umum, atau gangguan lainnya di lingkungan RT 06.</p>
+</div>
 
-            <label>Alamat</label>
-            <input type="text" name="alamat" required />
+<div class="container">
 
-            <label>Kategori Masalah</label>
+    <h2>Form Laporan Warga</h2>
+
+    <form id="laporanForm">
+
+        <div class="field">
+            <label class="label"><i class="fa-solid fa-user"></i> Nama Pelapor</label>
+            <input type="text" name="nama" required>
+        </div>
+
+        <div class="field">
+            <label class="label"><i class="fa-solid fa-house"></i> Alamat Lengkap</label>
+            <input type="text" name="alamat" required>
+        </div>
+
+        <div class="field">
+            <label class="label"><i class="fa-solid fa-list"></i> Kategori Masalah</label>
             <select name="kategori" required>
                 <option value="">-- Pilih Kategori --</option>
                 <option>Keamanan</option>
                 <option>Kebersihan</option>
                 <option>Fasilitas Umum</option>
+                <option>Keributan</option>
                 <option>Lainnya</option>
             </select>
+        </div>
 
-            <label>Deskripsi Masalah</label>
-            <textarea name="deskripsi" rows="4" required></textarea>
+        <div class="field">
+            <label class="label"><i class="fa-solid fa-file-lines"></i> Deskripsi Masalah</label>
+            <textarea name="deskripsi" required></textarea>
+        </div>
 
-            <label>No. HP (opsional)</label>
-            <input type="text" name="nohp" />
+        <div class="field">
+            <label class="label"><i class="fa-solid fa-phone"></i> No. HP</label>
+            <input type="text" name="nohp" required>
+        </div>
 
-            <button type="submit">Kirim Laporan</button>
-        </form>
+        <div class="field">
+            <label class="label"><i class="fa-solid fa-image"></i> Upload Foto (Opsional)</label>
+            <input type="file" id="fotoInput" accept="image/*">
 
-        <a href="formulir.html" class="back-link">⬅ Kembali</a>
-    </div>
+            <img id="preview">
+        </div>
 
-    <script>
-        const scriptURL = "https://script.google.com/macros/s/AKfycbxwPOjac1Kunt7Xv_e2LjuDKMcMV5oAF8_j-cdZRyQP9G_PJuH9e7lD1nYuVOOMo8Xu/exec"; // Ganti dengan URL Web App Google Script Anda
-        const form = document.getElementById("laporanForm");
-        const successBox = document.getElementById("success");
+        <input type="hidden" name="fotoBase64">
+        <input type="hidden" name="fotoName">
+        <input type="hidden" name="fotoType">
+        <input type="hidden" name="redirect" value="form-laporan-masalah.html">
 
-        form.addEventListener("submit", (e) => {
-            e.preventDefault();
-            fetch(scriptURL, { method: "POST", body: new FormData(form) })
-                .then((response) => {
-                    successBox.style.display = "block";
-                    form.reset();
-                })
-                .catch((error) => alert("Terjadi kesalahan. Coba lagi."));
-        });
-    </script>
-</body>
+        <button type="submit">Kirim Laporan</button>
 
-<!-- Google Apps Script: simpan sebagai Code.gs di project Apps Script -->
-<!-- Ganti SPREADSHEET_ID dan SHEET_NAME sesuai Google Sheet Anda -->
+        <div class="loading" id="loadingText">Mengirim laporan...</div>
+
+    </form>
+</div>
+
 <script>
+    const form = document.getElementById("laporanForm");
+    const fotoInput = document.getElementById("fotoInput");
+    const preview = document.getElementById("preview");
 
+    fotoInput.addEventListener("change", function() {
+        const file = this.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.style.display = "block";
+
+            document.querySelector("input[name='fotoBase64']").value = e.target.result.split(",")[1];
+            document.querySelector("input[name='fotoName']").value = file.name;
+            document.querySelector("input[name='fotoType']").value = file.type;
+        };
+        reader.readAsDataURL(file);
+    });
+
+    form.addEventListener("submit", function(e) {
+        e.preventDefault();
+        document.getElementById("loadingText").style.display = "block";
+
+        fetch("https://script.google.com/macros/s/AKfycbxwPOjac1Kunt7Xv_e2LjuDKMcMV5oAF8_j-cdZRyQP9G_PJuH9e7lD1nYuVOOMo8Xu/exec", {
+            method: "POST",
+            body: new FormData(form)
+        })
+        .then(response => response.text())
+        .then(html => {
+            document.open();
+            document.write(html);
+            document.close();
+        })
+        .catch(err => {
+            alert("Gagal mengirim laporan:\n" + err);
+            document.getElementById("loadingText").style.display = "none";
+        });
+    });
 </script>
 
-<!-- Petunjuk deploy: -->
-<!-- 1. Buka https://script.google.com dan buat project baru. -->
-<!-- 2. Tambahkan file Code.gs, paste kode di atas (hapus /* */ komentar sekitar fungsi). -->
-<!-- 3. Ganti 'SPREADSHEET_ID' dengan ID Google Sheet Anda (dapat dari URL sheet). -->
-<!-- 4. Ganti 'SHEET_NAME' dengan nama tab (worksheet) yang akan menyimpan data. -->
-<!-- 5. Save, lalu pilih Deploy -> New deployment -> Web app. -->
-<!--    - Pilih Execute as: Me -->
-<!--    - Who has access: Anyone (atau Anyone with Google account) tergantung kebutuhan -->
-<!-- 6. Salin Web app URL dan tempelkan ke variabel scriptURL di form-laporan-masalah.html -->
-
-<!-- Catatan keamanan: Jika Anda memilih "Anyone, even anonymous", maka form bisa di-submit tanpa login Google. -->
-<!-- Jika ingin verifikasi lebih ketat, gunakan akses terbatas dan sertakan autentikasi. -->
-
+</body>
 </html>
-
