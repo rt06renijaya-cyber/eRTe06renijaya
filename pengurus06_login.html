@@ -71,6 +71,11 @@
             font-weight: 600;
             color: #333;
         }
+        
+        /* New Styling for Password Input with Icon */
+        .password-container {
+            position: relative;
+        }
 
         .form-control {
             width: 100%;
@@ -80,6 +85,8 @@
             box-sizing: border-box;
             font-size: 1em;
             transition: border-color 0.3s, box-shadow 0.3s;
+            /* Tambahkan padding kanan untuk ikon */
+            padding-right: 45px; 
         }
 
         .form-control:focus {
@@ -87,6 +94,24 @@
             box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
             outline: none;
         }
+        
+        /* Ikon Mata (Show/Hide Password) */
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #a0a0a0;
+            font-size: 1em;
+            transition: color 0.2s;
+            z-index: 10;
+        }
+        
+        .toggle-password:hover {
+            color: #333;
+        }
+        /* End of New Styling */
 
         .btn-login {
             width: 100%;
@@ -135,6 +160,73 @@
         /* Animations */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* ============================
+           CUSTOM NOTIFICATION/ALERT STYLING
+           ============================= */
+        .custom-alert {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none; /* Default hidden */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .custom-alert.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .alert-content {
+            background-color: white;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            max-width: 350px;
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .custom-alert.show .alert-content {
+            transform: scale(1);
+        }
+
+        .alert-icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+        }
+
+        .alert-success .alert-icon { color: #28a745; }
+        .alert-error .alert-icon { color: #dc3545; }
+
+        .alert-content h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+
+        .alert-content p {
+            margin: 0 0 20px 0;
+            color: #6c757d;
+        }
+
+        .alert-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .alert-btn:hover { background-color: #0056b3; }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
@@ -156,7 +248,10 @@
 
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" class="form-control" required placeholder="Masukkan Password">
+                <div class="password-container">
+                    <input type="password" id="password" class="form-control" required placeholder="Masukkan Password">
+                    <i class="fas fa-eye toggle-password" id="togglePassword"></i>
+                </div>
             </div>
 
             <p id="error-message">Username atau Password salah!</p>
@@ -172,12 +267,57 @@
             </a>
         </div>
     </div>
+    
+    <div id="successAlert" class="custom-alert alert-success">
+        <div class="alert-content">
+            <i class="alert-icon fas fa-check-circle"></i>
+            <h3>Login Berhasil!</h3>
+            <p>Selamat datang, Pengurus RT. Anda akan diarahkan ke dashboard.</p>
+            <button class="alert-btn" onclick="closeAlertAndRedirect('pengurus06.html')">OK</button>
+        </div>
+    </div>
+
+    <div id="errorCustomAlert" class="custom-alert alert-error">
+        <div class="alert-content">
+            <i class="alert-icon fas fa-times-circle"></i>
+            <h3>Login Gagal!</h3>
+            <p>Username atau password yang Anda masukkan salah. Silakan coba lagi.</p>
+            <button class="alert-btn" style="background-color: #dc3545;" onclick="closeCustomAlert('errorCustomAlert')">Tutup</button>
+        </div>
+    </div>
 
     <script>
         // =========================================================================
-        // JAVASCRIPT VALIDASI (CLIENT-SIDE)
-        // PERINGATAN: Kredensial ini dapat dilihat di source code (TIDAK AMAN)
+        // JAVASCRIPT VALIDASI & CUSTOM ALERT LOGIC
         // =========================================================================
+        
+        function closeCustomAlert(id) {
+            document.getElementById(id).classList.remove('show');
+        }
+
+        function closeAlertAndRedirect(url) {
+            closeCustomAlert('successAlert');
+            window.location.href = url;
+        }
+
+        // =========================================================================
+        // LOGIKA SHOW/HIDE PASSWORD
+        // =========================================================================
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+
+        togglePassword.addEventListener('click', function (e) {
+            // Toggle type atribut antara 'password' dan 'text'
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // Toggle ikon mata
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+        // =========================================================================
+
+
         document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault(); 
 
@@ -192,16 +332,23 @@
             if (enteredUsername === CORRECT_USERNAME && enteredPassword === CORRECT_PASSWORD) {
                 // Login Berhasil
                 errorMessage.style.display = 'none';
-                
-                // Simpan status autentikasi
                 sessionStorage.setItem('auth', CORRECT_USERNAME); 
                 
-                alert("Login Berhasil! Mengarahkan ke Dashboard...");
-                window.location.href = "pengurus06.html"; 
+                document.getElementById('successAlert').classList.add('show');
+                
+                // Redirect otomatis setelah 3 detik
+                setTimeout(function() {
+                    if (document.getElementById('successAlert').classList.contains('show')) {
+                         window.location.href = "pengurus06.html";
+                    }
+                }, 3000); 
+
             } else {
                 // Login Gagal
                 errorMessage.style.display = 'block';
                 document.getElementById('password').value = ''; 
+                
+                document.getElementById('errorCustomAlert').classList.add('show');
             }
         });
 
