@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tentang Kami - RT. 06 Reni Jaya</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ============================
+           GLOBAL STYLING (DIAMBIL DARI FILE UTAMA ANDA)
+           ============================= */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8fafc;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .header-elegant {
+            background: linear-gradient(135deg, #003636, #005c5c);
+            color: white;
+            padding: 40px 20px;
+            border-bottom-left-radius: 60px;
+            border-bottom-right-radius: 60px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            text-align: center;
+        }
+        .title-elegant {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        h2 {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #004d40;
+            margin-bottom: 10px;
+            margin-top: 40px;
+        }
+        
+        .divider {
+            width: 80px;
+            height: 4px;
+            background-color: #007bff;
+            margin: 0 auto 40px auto;
+            border-radius: 2px;
+        }
+
+        /* ============================
+           SECTION STYLING (Visi Misi)
+           ============================= */
+        .section-box {
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .section-box p {
+            max-width: 900px;
+            margin: 15px auto 30px auto;
+            font-size: 1.1em;
+            color: #555;
+            text-align: center;
+        }
+        .section-box h3 {
+            color: #004d40;
+            margin-top: 25px;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+        .section-box ul {
+            max-width: 800px; 
+            margin: 0 auto; 
+            text-align: left; 
+            list-style-type: disc; 
+            color: #555;
+            padding-left: 40px;
+        }
+
+
+        /* ============================
+           ORGANIZATION CARD GRID STYLING
+           ============================= */
+        .org-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+            text-align: center; /* Pastikan konten di tengah */
+        }
+
+        .position-card {
+            background-color: #e0ffff; 
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #004d40;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .position-card:hover {
+            box-shadow: 0 5px 15px rgba(0, 77, 64, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .position-card h4 {
+            font-size: 1.2em;
+            color: #004d40;
+            margin: 0 0 5px 0;
+            font-weight: 600;
+        }
+
+        .position-card p {
+            font-size: 1.1em;
+            color: #333;
+            margin: 0;
+            font-weight: 700;
+        }
+        
+        .icon-small {
+            color: #007bff;
+            margin-right: 10px;
+        }
+        .position-card .icon-jabatan {
+            font-size: 1.8em;
+            color: #004d40;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* ============================
+           FOOTER
+           ============================= */
+        .footer {
+            background: linear-gradient(135deg, #002e28, #004d40);
+            color: #e0ffff;
+            text-align: center;
+            padding: 40px 15px;
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.2);
+            margin-top: 40px;
+        }
+        .footer p { margin: 5px 0; font-size: 0.9em; opacity: 0.9; }
+        .footer a { color: #ffc107; text-decoration: none; transition: color 0.3s; }
+        .footer a:hover { color: #fff; }
+        
+        /* Responsive Adjustments */
+        @media(max-width: 768px) {
+            .org-grid {
+                grid-template-columns: 1fr;
+            }
+            .section-box {
+                padding: 20px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="header-elegant">
+        <div class="header-content">
+            <h1 class="title-elegant">Profil Pengurus RT. 06</h1>
+            <p style="opacity: 0.8; margin-top: 10px;">
+                Struktur Organisasi dan Visi Misi RT. 06 Reni Jaya
+            </p>
+        </div>
+    </div>
+
+    <div class="container">
+        
+        <div class="section-box">
+            <h2>Visi dan Misi Kami</h2>
+            <div class="divider"></div>
+            
+            <h3>Visi</h3>
+            <p>"Menjadikan RT. 06 sebagai lingkungan perumahan yang **Bersih, Aman, Tertib, dan Berbasis Digital** untuk meningkatkan kualitas hidup warga."</p>
+            
+            <h3>Misi</h3>
+            <ul>
+                <li>Meningkatkan keamanan dan ketertiban lingkungan melalui partisipasi aktif warga.</li>
+                <li>Mewujudkan lingkungan yang bersih, hijau, dan asri.</li>
+                <li>Mendorong transparansi pengelolaan iuran dan keuangan RT.</li>
+                <li>Memperkuat tali silaturahmi dan komunikasi antar warga melalui kegiatan rutin.</li>
+                <li>Mengembangkan sistem informasi berbasis digital untuk kemudahan administrasi warga.</li>
+            </ul>
+        </div>
+
+        <div class="section-box">
+            <h2>Daftar Pengurus RT. 06</h2>
+            <div class="divider"></div>
+            <p style="text-align: center; color: #555; margin-bottom: 30px;">Periode Jabatan 2025 - 2030</p>
+
+            <div class="org-grid">
+                
+                <div class="position-card" style="border-left-color: #007bff;">
+                    <i class="fas fa-user-tie icon-jabatan" style="color: #007bff;"></i>
+                    <h4>Ketua RT</h4>
+                    <p>Ryan Garry</p>
+                </div>
+
+                <div class="position-card">
+                    <i class="fas fa-user-tag icon-jabatan"></i>
+                    <h4>Sekretaris</h4>
+                    <p>Muhamad Asep Saputra</p>
+                </div>
+                
+                <div class="position-card">
+                    <i class="fas fa-money-check-alt icon-jabatan"></i>
+                    <h4>Bendahara</h4>
+                    <p>Rainier Barton Tomahu</p>
+                </div>
+
+                <div class="position-card">
+                    <i class="fas fa-running icon-jabatan"></i>
+                    <h4>Seksi Pemuda & Olahraga</h4>
+                    <p>Wahyu</p>
+                </div>
+
+                <div class="position-card">
+                    <i class="fas fa-lock icon-jabatan"></i>
+                    <h4>Seksi Keamanan</h4>
+                    <p>Sriyono</p>
+                </div>
+                
+                <div class="position-card">
+                    <i class="fas fa-tree icon-jabatan"></i>
+                    <h4>Seksi Lingkungan</h4>
+                    <p>Chamzah</p>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="footer">
+        <p>Portal Warga RT. 06 Reni Jaya</p>
+        <p>&copy; 2025 Hak Cipta Dilindungi.<br>Dikelola oleh Pengurus RT. 06 | <a href="#">Kebijakan Privasi</a></p>
+    </div>
+
+</body>
+</html>
