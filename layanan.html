@@ -3,161 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Informasi & Formulir - RT. 06 Reni Jaya</title>
+    <title>Layanan Administratif RT. 06</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
     <style>
+        /* Gaya Dasar Konsisten */
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f7f6;
+            background-color: #f8fafc;
             color: #333;
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
         .container {
-            max-width: 1100px;
+            max-width: 1000px; /* Lebar lebih kecil fokus pada layanan */
             margin: 0 auto;
-            padding: 20px;
+            padding: 30px 20px 60px;
             text-align: center;
         }
 
-        .header {
-            background-color: #004d40;
+        /* ============================
+           HEADER Halaman Layanan
+           ============================= */
+        .page-header {
+            /* Warna primer (biru) untuk layanan administratif */
+            background: linear-gradient(135deg, #0056b3, #007bff); 
             color: white;
-            padding: 30px 20px;
-            border-bottom-left-radius: 10px;
-            border-bottom-right-radius: 10px;
+            padding: 80px 20px 40px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            margin-bottom: 40px;
         }
 
-        .logo-img {
-            width: 120px;
-            height: auto;
-            border-radius: 50%;
-            border: 4px solid #fff;
-            margin-bottom: 15px;
+        .page-header h1 {
+            font-size: 2.8em;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            letter-spacing: 1.5px;
         }
 
-        h1 {
-            margin: 0;
-            font-size: 2.2em;
+        .page-header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
         }
-
-        .btn-back {
-            display: inline-block;
-            margin-top: 15px;
-            background-color: #ff9800;
-            color: white;
-            padding: 10px 25px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background-color 0.3s;
+        
+        .divider {
+            width: 80px;
+            height: 4px;
+            background-color: #17a2b8;
+            margin: 10px auto 40px auto;
+            border-radius: 2px;
         }
-
-        .btn-back:hover {
-            background-color: #e68900;
-        }
-
-        .features {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            padding: 40px 0;
-        }
-
-        .feature-card {
-            background-color: white;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            width: 30%;
-            min-width: 260px;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
-        }
-
-        .feature-card h3 {
+        
+        h2 {
+            font-size: 2em;
+            font-weight: 700;
             color: #004d40;
-            margin-top: 0;
+            margin-bottom: 0;
+            margin-top: 40px;
         }
 
-        .btn-primary {
+        /* ============================
+           SERVICE CARDS / BOXES
+           ============================= */
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .service-card {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: left;
+            border-left: 6px solid #17a2b8; /* Border Kiri Ikonik */
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .service-card i {
+            font-size: 2.2em;
+            color: #007bff; /* Warna ikon biru */
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .service-card h3 {
+            font-size: 1.35em;
+            font-weight: 600;
+            color: #343a40;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        
+        .service-card p {
+            font-size: 0.95em;
+            color: #6c757d;
+            margin-bottom: 20px;
+        }
+        
+        .btn-action {
             display: inline-block;
-            background-color: #007bff;
+            background-color: #28a745;
             color: white;
             padding: 10px 25px;
             text-decoration: none;
-            border-radius: 5px;
-            margin-top: 15px;
-            font-weight: bold;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9em;
             transition: background-color 0.3s;
         }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
+        
+        .btn-action:hover {
+            background-color: #1e7e34;
+        }
+        
+        /* Box Catatan Penting */
+        .note-box {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 40px;
+            text-align: left;
         }
 
+        .note-box h3 {
+            color: #856404;
+            margin-top: 0;
+            font-size: 1.2em;
+        }
+        
+        .note-box p {
+            font-size: 0.95em;
+        }
+
+        /* ============================
+           FOOTER
+           ============================= */
         .footer {
-            background-color: #333;
-            color: white;
-            padding: 20px 0;
-            margin-top: 20px;
-            font-size: 0.9em;
+            background: linear-gradient(135deg, #002e28, #004d40);
+            color: #e0ffff;
+            text-align: center;
+            padding: 30px 15px;
+            margin-top: 40px;
         }
-
-        @media (max-width: 600px) {
-            .feature-card {
-                width: 100%;
+        
+        /* Responsif */
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2.2em;
             }
-            h1 {
-                font-size: 1.8em;
+            .service-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
+
 <body>
 
-    <div class="header" style="text-align: center;">
-        <img src="logo_rt06.png" alt="Logo RT.06 Reni Jaya" class="logo-img">
-        <h1>Formulir & Pengajuan Layanan Warga</h1>
-        <p>Silakan pilih jenis layanan yang ingin diajukan.</p>
-        <a href="index.html" class="btn-back">⬅ Kembali ke Home</a>
+    <div class="page-header">
+        <i class="fas fa-file-signature" style="font-size: 3em; margin-bottom: 15px;"></i>
+        <h1>Pusat Layanan Administratif RT. 06</h1>
+        <p>Ajukan berbagai permohonan surat dan izin kegiatan dengan mudah dan cepat melalui formulir digital.</p>
     </div>
 
     <div class="container">
-        <div class="features">
+        
+        <h2>Pilih Jenis Permohonan Surat</h2>
+        <div class="divider"></div>
 
-            <!-- Surat Pengantar -->
-            <div class="feature-card">
-                <h3>📄 Form Pengajuan Surat Pengantar</h3>
-                <p>Gunakan formulir ini untuk kebutuhan administrasi seperti domisili, kerja, atau keperluan lainnya.</p>
-                <a href="form-surat-pengantar.html" class="btn-primary">Isi Formulir</a>
+        <div class="service-grid">
+
+            <div class="service-card">
+                <i class="fas fa-file-alt"></i>
+                <h3>Surat Pengantar Umum</h3>
+                <p>Surat pengantar untuk keperluan administrasi kependudukan (KTP, KK), melamar kerja, atau lainnya.</p>
+                <a href="form-surat-pengantar.html" class="btn-action">
+                    <i class="fas fa-paper-plane"></i> Ajukan Sekarang
+                </a>
             </div>
 
-            <!-- Izin Lingkungan -->
-            <div class="feature-card">
-                <h3>🏡 Form Izin Lingkungan</h3>
-                <p>Ajukan izin acara, renovasi bangunan, atau kegiatan lain yang melibatkan lingkungan sekitar.</p>
-                <a href="form-izin-lingkungan.html" class="btn-primary" style="background-color:#28a745;">Ajukan Izin</a>
+            <div class="service-card">
+                <i class="fas fa-store"></i>
+                <h3>Surat Keterangan Usaha (SKU)</h3>
+                <p>Permohonan surat keterangan untuk legalitas usaha mikro atau kecil yang berlokasi di RT. 06.</p>
+                <a href="form-sku.html" class="btn-action">
+                    <i class="fas fa-paper-plane"></i> Ajukan Sekarang
+                </a>
             </div>
 
-            <!-- Laporan Masalah -->
-            <div class="feature-card">
-                <h3>⚠️ Laporan Permasalahan Lingkungan</h3>
-                <p>Laporkan gangguan keamanan, kebersihan, fasilitas umum, atau masalah warga lainnya.</p>
-                <a href="form-laporan-masalah.html" class="btn-primary" style="background-color:#dc3545;">Laporkan Masalah</a>
+            <div class="service-card">
+                <i class="fas fa-drum"></i>
+                <h3>Izin Keramaian/Hajatan</h3>
+                <p>Pengajuan izin untuk acara yang menimbulkan keramaian seperti pesta, hajatan, atau kegiatan warga.</p>
+                <a href="form-izin-keramaian.html" class="btn-action">
+                    <i class="fas fa-paper-plane"></i> Ajukan Sekarang
+                </a>
+            </div>
+            
+            <div class="service-card">
+                <i class="fas fa-walking"></i>
+                <h3>Laporan Pindah/Datang</h3>
+                <p>Pelaporan kedatangan warga baru atau perpindahan warga keluar dari lingkungan RT. 06.</p>
+                <a href="form-pindah-datang.html" class="btn-action">
+                    <i class="fas fa-paper-plane"></i> Ajukan Sekarang
+                </a>
             </div>
 
+        </div>
+        
+        <div class="note-box">
+            <h3><i class="fas fa-exclamation-circle"></i> Catatan Penting</h3>
+            <p>1. Pastikan Anda mengisi data diri sesuai KTP dan KK yang berlaku.</p>
+            <p>2. Waktu pemrosesan surat berkisar 1x24 jam setelah data diterima dan divalidasi oleh pengurus.</p>
+            <p>3. Pengurus akan menghubungi Anda melalui nomor HP yang dicantumkan untuk pengambilan atau konfirmasi surat.</p>
+        </div>
+        
+        <div style="margin-top: 40px;">
+            <a href="index.html" style="color: #007bff; text-decoration: none; font-weight: 600;"><i class="fas fa-arrow-left"></i> Kembali ke Portal Utama</a>
         </div>
     </div>
 
     <div class="footer">
-        <p>&copy; 2025 Portal Warga RT. 06 Reni Jaya. <br> Dijaga bersama dengan semangat kebersamaan.</p>
+        <p>Portal Warga RT. 06 Reni Jaya</p>
+        <p>&copy; 2025 Hak Cipta Dilindungi.</p>
     </div>
 
 </body>
