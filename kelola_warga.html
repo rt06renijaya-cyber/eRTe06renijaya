@@ -160,6 +160,29 @@
     let currentView = 'warga';
 
     // =========================================================
+    // KONFIGURASI 4 KOLOM UTAMA UNTUK TABEL
+    // =========================================================
+
+    const DISPLAY_INDICES = {
+        // === Database Warga (Hanya 4 Kolom Penting) ===
+        // Index: 0=ID Warga, 1=Nama, 2=NIK, ..., 15=Alamat Rumah
+        'warga': [
+            0,  // ID Warga
+            1,  // Nama
+            2,  // NIK
+            15  // Alamat Rumah 
+        ],
+        // === Pengajuan Surat (Hanya 4 Kolom Penting) ===
+        // Index: 0=Nama Lengkap, ..., 3=Alamat Lengkap, ..., 12=NIK, ..., 15=Keperluan Surat
+        'pengajuan': [
+            0,  // Nama Lengkap
+            12, // No. NIK 
+            15, // Keperluan Surat 
+            3   // Alamat Lengkap 
+        ]
+    };
+
+    // =========================================================
     // FUNGSI PENGATUR VIEW & LOADING DATA
     // =========================================================
 
@@ -240,6 +263,9 @@
     // =========================================================
 
     function buildTableHTML(header, data, type) {
+        // Ambil indeks kolom yang telah dikonfigurasi (HANYA 4)
+        const indices = DISPLAY_INDICES[type];
+
         if (data.length === 0) {
             return `<div class="no-data alert alert-light">
                         <i class="fas fa-info-circle me-2"></i> Tidak ada data ${type === 'warga' ? 'Warga' : 'Pengajuan'} yang ditemukan.
@@ -250,19 +276,21 @@
         let tableHTML = `<div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
                             <table class="table table-striped table-hover"><thead><tr>`;
         
-        // Tampilkan Header (dari Apps Script yang sudah difilter/diproses)
-        header.forEach(h => {
+        // Tampilkan Header HANYA untuk indeks yang dipilih
+        indices.forEach(index => {
+            const h = header[index];
             // Memastikan header di-capitalize dan rapi
             const cleanHeader = String(h).toUpperCase().replace(/_/g, ' ');
             tableHTML += `<th class="text-nowrap">${cleanHeader}</th>`;
         });
         tableHTML += `<th class="text-nowrap">AKSI</th></tr></thead><tbody>`;
 
-        // Isi Baris Data
+        // Isi Baris Data HANYA untuk indeks yang dipilih
         data.forEach((row, index) => {
             tableHTML += `<tr>`;
             
-            row.forEach((cell) => {
+            indices.forEach(i => {
+                const cell = row[i];
                 // Mengganti null/undefined/kosong dengan '-'
                 const displayValue = cell === '' || cell === null || cell === undefined ? '-' : cell;
                 tableHTML += `<td class="text-nowrap">${displayValue}</td>`;
@@ -288,7 +316,7 @@
 
 
     // =========================================================
-    // FUNGSI MODAL DETAIL
+    // FUNGSI MODAL DETAIL (TETAP MENAMPILKAN SEMUA KOLOM)
     // =========================================================
 
     function showDetailModal(index, type) {
