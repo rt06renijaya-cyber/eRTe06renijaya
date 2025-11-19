@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Data Warga & Pengajuan - RT. 06</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script>
+        // =========================================================================
+        // PENTING: GANTI DENGAN URL APPS SCRIPT ANDA
+        // =========================================================================
+        const APPS_SCRIPT_URL = "GANTI_DENGAN_URL_DEPLOYMENT_APPS_SCRIPT_ANDA"; 
+        const CORRECT_USERNAME = "adminrt06";
+
+        function checkAuth() {
+            if (sessionStorage.getItem('auth') === CORRECT_USERNAME) {
+                return true;
+            } else {
+                window.location.href = "pengurus06_login.html";
+                return false;
+            }
+        }
+        
+        // Jalankan pemeriksaan autentikasi saat halaman dimuat
+        if (!checkAuth()) {
+            document.body.style.display = 'none';
+        }
+    </script>
+
+    <style>
+        /* ============================
+           GLOBAL STYLING & UTILITY
+           ============================= */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8fafc;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        h2 {
+            font-size: 2em;
+            font-weight: 700;
+            color: #004d40;
+            margin-bottom: 5px;
+            border-bottom: 3px solid #28a745;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            color: white;
+            padding: 8px 15px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-green { background-color: #28a745; }
+        .btn-green:hover { background-color: #1e7e34; }
+        .btn-blue { background-color: #007bff; }
+        .btn-blue:hover { background-color: #0056b3; }
+        .btn-red { background-color: #dc3545; }
+        .btn-red:hover { background-color: #c82333; }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #28a745;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 2s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ============================
+           TABLE STYLING
+           ============================= */
+        .data-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .data-table th, .data-table td {
+            border: 1px solid #ddd;
+            padding: 10px 12px;
+            text-align: left;
+            font-size: 0.9em;
+            vertical-align: top;
+        }
+
+        .data-table th {
+            background-color: #e9ecef;
+            color: #333;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .data-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .data-table tr:hover {
+            background-color: #e2f0fd;
+        }
+        
+        /* ============================
+           FORM MODAL STYLING
+           ============================= */
+        .custom-alert {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .custom-alert.show {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .alert-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 15px;
+            max-width: 600px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            transform: scale(0.7);
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            margin: 20px 10px; 
+        }
+        
+        .custom-alert.show .alert-content {
+             transform: scale(1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #004d40
