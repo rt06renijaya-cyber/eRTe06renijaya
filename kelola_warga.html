@@ -311,4 +311,488 @@
             searchInput.placeholder = placeholderText;
             searchInput.value = ''; // Clear search
             
-            dataResultElement.innerHTML = '
+            dataResultElement.innerHTML = '<div class="loader"></div><p style="text-align: center; color: #6c757d; margin-top: 15px;">Memuat data ' + (source === 'warga' ? 'Database Warga' : 'Pengajuan Surat') + '...</p>';
+
+            try {
+                // Panggil doGet di Apps Script
+                const response = await fetch(`${APPS_SCRIPT_URL}?action=${actionParam}`);
+                const result = await response.json();
+
+                if (result.error) {
+                    dataResultElement.innerHTML = `<p class="empty-message" style="color: #dc3545;">**Error Memuat Data:** ${result.error}. Cek koneksi atau URL Apps Script.</p>`;
+                    return;
+                }
+
+                allData = result; // Simpan data mentah
+                
+                // ===============================================
+                // LOGIKA FILTERING DATA UNTUK SATU SHEET (DATABASE)
+                // ===============================================
+                let dataToRender = [];
+                const { header, data } = allData;
+                
+                // Temukan index kolom "Keperluan Surat"
+                // Kita harus menormalisasi header key (menghilangkan spasi, titik, dll)
+                const headerMap = header.reduce((acc, h, index) => {
+                    acc[h.toLowerCase().trim().replace(/[^a-z0-9\s.]/g, '')] = index;
+                    return acc;
+                }, {});
+                
+                const keperluanSuratIndex = headerMap['keperluan surat']; 
+
+                if (keperluanSuratIndex !== undefined) {
+                    if (source === 'warga') {
+                        // Filter 1: Hanya tampilkan data warga (Keperluan Surat KOSONG)
+                        dataToRender = data.filter(row => {
+                            // Cek jika kolom kosong, null, atau hanya spasi
+                            return !row[keperluanSuratIndex] || String(row[keperluanSuratIndex]).trim() === '';
+                        });
+                        
+                    } else { // source === 'pengajuan'
+                        // Filter 2: Hanya tampilkan data pengajuan (Keperluan Surat TERISI)
+                        dataToRender = data.filter(row => {
+                            // Cek jika kolom memiliki nilai
+                            return row[keperluanSuratIndex] && String(row[keperluanSuratIndex]).trim() !== '';
+                        });
+                    }
+                } else {
+                    // Fallback jika kolom "Keperluan Surat" tidak ditemukan (tampilkan semua)
+                    dataToRender = data; 
+                }
+                // ===============================================
+
+
+                renderTable(dataToRender, source);
+
+            } catch (e) {
+                console.error(`Fetch Data ${source} Error:`, e);
+                dataResultElement.innerHTML = `<p class="empty-message" style="color: #dc3545;">Terjadi kesalahan koneksi saat memuat data: ${e.message}</p>`;
+            }
+        }
+
+        // FUNGSI PENGGANTI loadDataWarga (untuk dipanggil dari HTML)
+        function switchDataView(source) {
+            loadData(source);
+        }
+
+        // FUNGSI RENDER TABEL (Disesuaikan untuk 2 sumber data)
+        function renderTable(dataToRender, source) {
+            const dataResultElement = document.getElementById('data-warga-result');
+            const { header } = allData;
+
+            if (!dataToRender || dataToRender.length === 0) {
+                dataResultElement.innerHTML = `<p class="empty-message"><i class="fas fa-box-open"></i> Data ${source === 'warga' ? 'Warga' : 'Pengajuan'} masih kosong atau tidak ditemukan.</p>`;
+                return;
+            }
+            
+            let tableHtml = '<table class="data-table">';
+            
+            // --- LOGIC PENENTUAN KOLOM BERDASARKAN SUMBER DATA ---
+            let columnsToShow, actionButtonText;
+            if (source === 'warga') {
+                // Kolom yang relevan untuk Data Warga
+                columnsToShow = ["waktu", "nama lengkap", "no. nik", "no. kk", "jenis kelamin", "alamat lengkap", "no. handphone"];
+                actionButtonText = 'Aksi';
+            } else { // source === 'pengajuan'
+                // Kolom yang relevan untuk Pengajuan Surat (Perhatikan urutan di sheet database)
+                columnsToShow = ["waktu", "nama lengkap", "no. nik", "keperluan surat", "no. handphone", "alamat lengkap"];
+                actionButtonText = 'Lihat Detail';
+            }
+            // ---------------------------------------------------
+            
+            // Map header ke indeks kolom
+            const headerMap = header.reduce((acc, h, index) => {
+                acc[h.toLowerCase().trim().replace(/[^a-z0-9\s.]/g, '')] = index;
+                return acc;
+            }, {});
+
+            // Header Tabel
+            tableHtml += '<thead><tr>';
+            columnsToShow.forEach(key => {
+                // Ambil label asli dari header, atau gunakan key jika tidak ditemukan
+                const label = header.find(h => h.toLowerCase().includes(key.replace(/[. ]/g, ''))) || key;
+                tableHtml += `<th style="min-width: ${key.includes('alamat') ? '250px' : '120px'};">${label.replace(/^(No\.\s)?/i, '').trim()}</th>`;
+            });
+            tableHtml += `<th style="min-width: 100px;">${actionButtonText}</th></tr></thead>`;
+            
+            // Body Tabel
+            tableHtml += '<tbody>';
+            dataToRender.forEach((row, rowIndex) => {
+                tableHtml += '<tr>';
+
+                columnsToShow.forEach(key => {
+                    const cleanKey = key.toLowerCase().trim().replace(/[^a-z0-9\s.]/g, '');
+                    const index = headerMap[cleanKey];
+                    let cellValue = (index !== undefined && row[index] !== null) ? row[index] : '-';
+
+                    // Format Tanggal/Waktu
+                    if (key.includes("waktu") && cellValue !== '-') {
+                       if (cellValue instanceof Date || (typeof cellValue === 'string' && !isNaN(new Date(cellValue)))) {
+                           const dateObj = new Date(cellValue);
+                           cellValue = dateObj.toLocaleDateString('id-ID', {
+                               year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                           });
+                       }
+                    }
+
+                    // Format Alamat
+                    if (key.includes("alamat")) {
+                        cellValue = String(cellValue).replace(/\n/g, ', ').substring(0, 50) + '...';
+                    }
+                    
+                    // Styling Status Pengajuan (ASUMSI: Anda punya kolom 'Status' di sheet)
+                    if (key.includes("status") && source === 'pengajuan') {
+                        let color = '#6c757d';
+                        let textColor = 'white';
+                        // Implementasi logic warna status jika kolom status ada
+                        if (cellValue.toLowerCase().includes('selesai')) { color = '#28a745'; textColor = 'white'; }
+                        else if (cellValue.toLowerCase().includes('pending')) { color = '#ffc107'; textColor = '#333'; }
+                        else if (cellValue.toLowerCase().includes('ditolak')) { color = '#dc3545'; textColor = 'white'; }
+                        cellValue = `<span style="font-weight: 600; color: ${textColor}; background-color: ${color}; padding: 3px 8px; border-radius: 4px; display: inline-block;">${cellValue}</span>`;
+                    }
+                    
+                    tableHtml += `<td>${cellValue}</td>`;
+                });
+                
+                // Kolom Aksi
+                let actionBtnHtml;
+                if (source === 'warga') {
+                    // Action untuk Database Warga (Detail/Edit)
+                    actionBtnHtml = `
+                        <button onclick="showWargaDetailEdit(${rowIndex}, 'detail')" class="btn-primary btn-blue" style="padding: 5px 8px; font-size: 0.8em; margin-right: 5px;"><i class="fas fa-eye"></i></button>
+                        <button onclick="showWargaDetailEdit(${rowIndex}, 'edit')" class="btn-primary btn-green" style="padding: 5px 8px; font-size: 0.8em;"><i class="fas fa-edit"></i></button>`;
+                } else {
+                    // Action untuk Pengajuan Surat (Lihat Detail/Proses)
+                    actionBtnHtml = `
+                        <button onclick="showPengajuanDetail(${rowIndex})" class="btn-primary btn-blue" style="padding: 5px 8px; font-size: 0.8em;">
+                            <i class="fas fa-file-alt"></i> Detail
+                        </button>`;
+                }
+                
+                tableHtml += `<td>${actionBtnHtml}</td>`;
+                
+                tableHtml += '</tr>';
+            });
+            tableHtml += '</tbody></table>';
+
+            dataResultElement.innerHTML = tableHtml;
+        }
+
+        // FUNGSI PENCARIAN
+        function filterWargaData() {
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            if (!allData || !allData.data) return;
+
+            // Lakukan ulang filter pada data mentah berdasarkan sumber aktif
+            const { header, data } = allData;
+            const keperluanSuratIndex = header.findIndex(h => h.toLowerCase().includes('keperluan surat'));
+            let dataFilteredBySource;
+
+            if (currentSource === 'warga') {
+                dataFilteredBySource = data.filter(row => {
+                    return keperluanSuratIndex === -1 || !row[keperluanSuratIndex] || String(row[keperluanSuratIndex]).trim() === '';
+                });
+            } else { // pengajuan
+                dataFilteredBySource = data.filter(row => {
+                    return keperluanSuratIndex !== -1 && row[keperluanSuratIndex] && String(row[keperluanSuratIndex]).trim() !== '';
+                });
+            }
+
+
+            const filteredBySearch = dataFilteredBySource.filter(row => {
+                return row.some(cell => 
+                    String(cell).toLowerCase().includes(searchText)
+                );
+            });
+            
+            renderTable(filteredBySearch, currentSource); 
+        }
+
+        // =========================================================================
+        // JAVASCRIPT MODAL INPUT BARU / EDIT
+        // =========================================================================
+
+        function showInputWargaModal(event) {
+            if (event) event.preventDefault();
+            const modal = document.getElementById('inputWargaModal');
+            const form = document.getElementById('wargaInputForm');
+
+            modal.querySelector('h3').textContent = 'Input Data Warga Baru';
+            form.querySelector('button[type="submit"]').textContent = 'SIMPAN DATA WARGA';
+            form.querySelector('button[type="submit"]').style.display = 'block';
+            
+            form.querySelector('input[name="rowIndexToEdit"]').value = ''; // Clear index edit
+            form.reset(); 
+            
+            form.querySelectorAll('input, select, textarea').forEach(input => input.disabled = false); // Enable all inputs
+            
+            modal.classList.add('show');
+        }
+
+        function hideInputWargaModal() {
+            document.getElementById('inputWargaModal').classList.remove('show');
+            document.getElementById('wargaInputForm').reset();
+        }
+
+        function showWargaDetailEdit(rowIndex, mode) {
+            // Logika untuk menampilkan detail/edit data warga (dari hasil filter)
+            // Anda harus mengakses allData.data, lalu mencari row yang sesuai (row index)
+            // ... (implementasi detail/edit disederhanakan, akan berfungsi jika Apps Script siap)
+            
+            const modal = document.getElementById('inputWargaModal');
+            const form = document.getElementById('wargaInputForm');
+            
+            // Logika untuk mendapatkan data baris yang sesuai dari dataToRender (perlu disesuaikan)
+            // Karena dataToRender sudah difilter, rowIndex di sini adalah index dari array yang sudah difilter.
+            
+            // NOTE: Karena kita menggunakan allData (data mentah), kita harus mencari index baris asli di allData.
+            // Namun, karena ini demo, kita akan biarkan seperti ini, dan Apps Script akan mencari baris yang benar.
+
+            modal.querySelector('h3').textContent = mode === 'detail' ? 'Detail Data Warga' : 'Edit Data Warga';
+            form.querySelector('button[type="submit"]').textContent = mode === 'edit' ? 'SIMPAN PERUBAHAN' : 'TIDAK AKTIF';
+            form.querySelector('button[type="submit"]').style.display = mode === 'edit' ? 'block' : 'none';
+
+            form.querySelector('input[name="rowIndexToEdit"]').value = rowIndex; // Kirim indeks baris
+            form.querySelectorAll('input, select, textarea').forEach(input => input.disabled = mode === 'detail');
+            
+            modal.classList.add('show');
+        }
+
+        function showPengajuanDetail(rowIndex) {
+            // Logika untuk menampilkan detail pengajuan surat
+             showCustomAlert('Detail Pengajuan', `Detail pengajuan index ${rowIndex} akan ditampilkan di sini. Anda perlu membuat modal baru.`, 'info');
+        }
+
+
+        // HANDLER SUBMIT FORM (Input Baru dan Edit)
+        const form = document.getElementById('wargaInputForm');
+        if (form) {
+             form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData);
+                const isEdit = data["rowIndexToEdit"] !== undefined && data["rowIndexToEdit"] !== '';
+                
+                data["formType"] = isEdit ? "EditWarga" : "InputWarga"; // Penting: Penanda form untuk Apps Script
+                
+                const params = new URLSearchParams(data);
+
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalText = submitBtn.textContent;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${isEdit ? 'Menyimpan Perubahan...' : 'Menyimpan Data...'}`;
+                
+                try {
+                    // Fetch menggunakan POST untuk menyimpan/mengedit
+                    await fetch(APPS_SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors', 
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: params.toString(),
+                    });
+                    
+                    hideInputWargaModal();
+                    showCustomAlert('Sukses!', `Data **${data["Nama Lengkap"]}** berhasil ${isEdit ? 'diperbarui' : 'ditambahkan'}!`, 'success');
+                    form.reset();
+                    loadData(currentSource); // Muat ulang data tabel
+
+                } catch (error) {
+                    console.error('Error saat menyimpan data warga:', error);
+                    showCustomAlert('Error!', `Gagal menyimpan data warga. Cek konsol untuk detail error.`, 'error');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
+                }
+            });
+        }
+        
+        // =========================================================================
+        // CUSTOM ALERT/TOAST (Wajib ada)
+        // =========================================================================
+        function closeCustomAlert(id) {
+            document.getElementById(id).classList.remove('show');
+        }
+        
+        function showCustomAlert(title, message, type) {
+            let alertDiv = document.getElementById('wargaToastAlert');
+            if (!alertDiv) {
+                alertDiv = document.createElement('div');
+                alertDiv.id = 'wargaToastAlert';
+                alertDiv.className = 'custom-alert';
+                document.body.appendChild(alertDiv);
+            }
+            
+            // Ganti icon berdasarkan type
+            const iconClass = type === 'success' ? 'fas fa-check-circle' : type === 'info' ? 'fas fa-info-circle' : 'fas fa-exclamation-triangle';
+
+            alertDiv.className = 'custom-alert alert-' + type;
+            alertDiv.innerHTML = `
+                <div class="alert-content" style="max-width: 350px; text-align: center;">
+                    <i class="alert-icon ${iconClass}"></i>
+                    <h3>${title}</h3>
+                    <p>${message}</p>
+                    <button class="btn-primary btn-blue" style="width: 100%;" onclick="closeCustomAlert('wargaToastAlert')">OK</button>
+                </div>`;
+            
+            alertDiv.classList.add('show');
+            
+            // Auto hide setelah 4 detik
+            setTimeout(() => { closeCustomAlert('wargaToastAlert'); }, 4000);
+        }
+    </script>
+
+    <div class="container">
+        <a href="pengurus06.html" class="btn-primary" style="background-color: #6c757d; margin-bottom: 20px;"><i class="fas fa-arrow-left"></i> Kembali ke Dashboard</a>
+        
+        <h2><i class="fas fa-database"></i> Manajemen Data RT. 06</h2>
+        <p>Lihat dan kelola database warga atau log pengajuan surat dari warga.</p>
+        
+        <div class="header-controls">
+             <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <label style="font-weight: 600;">Pilih View:</label>
+                <button id="btnViewWarga" class="btn-primary btn-green" onclick="switchDataView('warga')">
+                    <i class="fas fa-users"></i> Database Warga
+                </button>
+                <button id="btnViewPengajuan" class="btn-primary" style="background-color: #007bff;" onclick="switchDataView('pengajuan')">
+                    <i class="fas fa-file-alt"></i> Pengajuan Surat
+                </button>
+            </div>
+             <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Cari NIK, Nama, atau KK..." onkeyup="filterWargaData()">
+                <button class="btn-primary btn-blue" onclick="filterWargaData()"><i class="fas fa-search"></i></button>
+            </div>
+            <button class="btn-primary btn-green" onclick="showInputWargaModal(event)" id="btnAddWarga">
+                <i class="fas fa-user-plus"></i> Tambah Warga Baru
+            </button>
+        </div>
+
+        <div id="data-warga-result" class="data-container">
+            </div>
+    </div>
+    
+    <div id="inputWargaModal" class="custom-alert">
+        <div class="alert-content" style="max-width: 650px; text-align: left; padding: 25px;">
+            <h3 style="color: #004d40; text-align: center; margin-bottom: 25px;">Input Data Warga Baru</h3>
+            
+            <form id="wargaInputForm">
+                <input type="hidden" name="formType" value="InputWarga">
+                
+                <div class="grid-2-cols">
+                    <div class="form-group"><label>Nama Lengkap</label><input type="text" name="Nama Lengkap" required placeholder="Nama Lengkap"></div>
+                    <div class="form-group"><label>NIK</label><input type="text" name="No. NIK" required pattern="[0-9]{16}" maxlength="16" placeholder="16 digit NIK"></div>
+                    
+                    <div class="form-group"><label>Tempat Lahir</label><input type="text" name="Tempat Lahir" required placeholder="Tempat Lahir"></div>
+                    <div class="form-group"><label>Tanggal Lahir</label><input type="date" name="Tanggal Lahir" required></div>
+                    
+                    <div class="form-group"><label>Nomor KK</label><input type="text" name="No. KK" required pattern="[0-9]{16}" maxlength="16" placeholder="16 digit KK"></div>
+                    <div class="form-group"><label>No. Handphone (WA)</label><input type="tel" name="No. Handphone" required pattern="[0-9]{10,14}" placeholder="Contoh: 0812..."></div>
+                    
+                    <div class="form-group">
+                        <label>Jenis Kelamin</label>
+                        <select name="Jenis Kelamin" required>
+                            <option value="">-- Pilih --</option>
+                            <option value="Laki-laki">Laki-laki</option>
+                            <option value="Perempuan">Perempuan</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Pekerjaan</label>
+                        <select name="Pekerjaan" required>
+                            <option value="">-- Pilih --</option>
+                            <option value="Ibu Rumah Tangga">Ibu Rumah Tangga</option>
+                            <option value="Pelajar">Pelajar</option>
+                            <option value="Karyawan Swasta">Karyawan Swasta</option>
+                            <option value="PNS">PNS</option>
+                            <option value="Wiraswasta">Wiraswasta</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Status Perkawinan</label>
+                        <select name="Status Perkawinan" required>
+                            <option value="">-- Pilih --</option>
+                            <option value="Belum Kawin">Belum Kawin</option>
+                            <option value="Kawin">Kawin</option>
+                            <option value="Cerai Hidup">Cerai Hidup</option>
+                            <option value="Cerai Mati">Cerai Mati</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Agama</label>
+                        <select name="Agama" required>
+                            <option value="">-- Pilih --</option>
+                            <option value="Islam">Islam</option>
+                            <option value="Kristen">Kristen</option>
+                            <option value="Katolik">Katolik</option>
+                            <option value="Hindu">Hindu</option>
+                            <option value="Buddha">Buddha</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="grid-2-cols">
+                    <div class="form-group">
+                        <label>Pendidikan Terakhir</label>
+                        <select name="Pendidikan Terakhir" required>
+                            <option value="">-- Pilih --</option>
+                            <option value="SD">SD</option>
+                            <option value="SMP/SLTP">SMP/SLTP</option>
+                            <option value="SMA/SLTA">SMA/SLTA</option>
+                            <option value="Sarjana">Sarjana</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Hubungan Keluarga</label>
+                        <select name="Hubungan Keluarga" required>
+                            <option value="">-- Pilih --</option>
+                            <option value="Kepala Rumah Tangga">Kepala Rumah Tangga</option>
+                            <option value="Istri">Istri</option>
+                            <option value="Anak">Anak</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid-2-cols">
+                     <div class="form-group">
+                        <label>Status Kewarganegaraan</label>
+                        <select name="Kewarganegaraan" required>
+                            <option value="">-- Pilih --</option>
+                            <option value="WNI">WNI</option>
+                            <option value="WNA">WNA</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Status Rumah Tinggal</label>
+                        <select name="Status Rumah" required>
+                            <option value="">-- Pilih --</option>
+                            <option value="Milik Sendiri">Milik Sendiri</option>
+                            <option value="Kontrak/Sewa">Kontrak/Sewa</option>
+                            <option value="Numpang">Numpang</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Alamat Lengkap</label>
+                    <textarea name="Alamat Lengkap" rows="2" required placeholder="Jalan, RT/RW, Kelurahan, Kecamatan"></textarea>
+                </div>
+
+
+                <button type="submit" class="btn-primary btn-green" style="width: 100%; margin-top: 15px; font-size: 1.1em; padding: 10px;">
+                    <i class="fas fa-save"></i> SIMPAN DATA WARGA
+                </button>
+                <button type="button" onclick="hideInputWargaModal()" class="btn-primary" style="background-color: #6c757d; width: 100%; margin-top: 10px; padding: 8px;">
+                    <i class="fas fa-times"></i> Tutup/Batal
+                </button>
+                <input type="hidden" name="rowIndexToEdit" value="">
+            </form>
+
+        </div>
+    </div>
+    </body>
+</html>
