@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buat Pengumuman - Dashboard RT. 06</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        // =========================================================================
+        // JAVASCRIPT AUTHENTIKASI SESI (Wajib di semua halaman pengurus)
+        // =========================================================================
+        const CORRECT_USERNAME = "adminrt06"; 
+
+        function checkAuth() {
+            if (sessionStorage.getItem('auth') === CORRECT_USERNAME) {
+                return true;
+            } else {
+                // Jika belum login, redirect ke halaman login
+                window.location.href = "pengurus06_login.html"; 
+                return false;
+            }
+        }
+
+        if (!checkAuth()) {
+            document.body.style.display = 'none'; 
+        }
+    </script>
+    
+    <style>
+        /* ============================
+           GLOBAL & HEADER STYLING (Konsisten dengan Dashboard)
+           ============================= */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8fafc;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px; /* Lebar lebih fokus untuk form */
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .header-elegant {
+            background: linear-gradient(135deg, #003636, #005c5c);
+            color: white;
+            padding: 50px 20px 70px 20px;
+            border-bottom-left-radius: 60px;
+            border-bottom-right-radius: 60px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .header-elegant::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="p" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 0 0 L 10 10 M 10 0 L 0 10" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23p)"/></svg>') repeat;
+            opacity: 0.2;
+            z-index: 1;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 3;
+        }
+        
+        .header-content h1 {
+            font-size: 2.5em; 
+            font-weight: 700;
+            margin: 0 0 5px 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .breadcrumb {
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            opacity: 0.9;
+            color: #d1e5e5;
+        }
+        .breadcrumb a {
+            color: #ffc107;
+            text-decoration: none;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        /* ============================
+           FORM STYLING
+           ============================= */
+        .form-card {
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            margin-top: -40px; /* Naik sedikit menutupi header */
+            position: relative;
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #004d40;
+            font-size: 1.1em;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="date"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1em;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+            outline: none;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        /* Button Utama (Kirim) */
+        .btn-submit {
+            background-color: #28a745;
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            text-transform: uppercase;
+            box-shadow: 0 6px 15px rgba(40, 167, 69, 0.4);
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+            width: 100%; /* Lebar penuh */
+        }
+        .btn-submit:hover {
+            background-color: #1e7e34;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.5);
+        }
+
+        /* Kembali Button */
+        .back-button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .btn-back {
+            display: inline-block;
+            background-color: #6c757d;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .btn-back:hover {
+            background-color: #5a6268;
+        }
+
+        /* Custom Alert Styling (Diambil dari Dashboard) */
+        .custom-alert {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); 
+            display: none; justify-content: center; align-items: center;
+            z-index: 1000; opacity: 0; transition: opacity 0.3s ease;
+        }
+        .custom-alert.show { display: flex; opacity: 1; }
+        .alert-content {
+            background-color: white; padding: 40px 30px; border-radius: 15px;
+            max-width: 320px; text-align: center; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); 
+            transform: scale(0.7); 
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .custom-alert.show .alert-content { transform: scale(1); }
+        .alert-icon {
+            font-size: 5em; margin-bottom: 20px; animation: pulse 1.5s infinite; 
+        }
+        .alert-success .alert-icon { color: #28a745; text-shadow: 0 0 15px rgba(40, 167, 69, 0.5); }
+        .alert-content h3 { margin: 0 0 10px 0; font-size: 1.8em; font-weight: 700; color: #333; }
+        .alert-content p { margin: 0 0 25px 0; color: #6c757d; font-size: 1em; }
+        .alert-btn {
+            background-color: #007bff; color: white; padding: 10px 25px; border: none;
+            border-radius: 50px; cursor: pointer; font-weight: 600;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+        .alert-btn:hover { background-color: #0056b3; transform: translateY(-2px); }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* FOOTER */
+        .footer {
+            background: linear-gradient(135deg, #002e28, #004d40);
+            color: #e0ffff;
+            text-align: center;
+            padding: 40px 15px;
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.2);
+            margin-top: 50px;
+        }
+        .footer p { margin: 5px 0; font-size: 0.9em; opacity: 0.9; }
+        .footer a { color: #ffc107; text-decoration: none; transition: color 0.3s; }
+        .footer a:hover { color: #fff; }
+
+        /* Responsive */
+        @media(max-width: 768px) {
+            .form-card {
+                padding: 30px 20px;
+            }
+            .header-content h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header-elegant">
+        <div class="header-content">
+            <div class="breadcrumb">
+                <a href="pengurus06_dashboard.html">Dashboard</a> &gt; Kirim Pengumuman
+            </div>
+            <h1>Kirim Pengumuman Instan</h1>
+            <p>Sampaikan informasi penting dan mendesak langsung ke portal warga.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        
+        <div class="form-card">
+            <form id="announcementForm">
+                
+                <div class="form-group">
+                    <label for="judul">Judul Pengumuman</label>
+                    <input type="text" id="judul" placeholder="Contoh: Jadwal Kerja Bakti atau Rapat Rutin" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="kategori">Kategori</label>
+                    <select id="kategori" required>
+                        <option value="">Pilih Kategori</option>
+                        <option value="umum">Umum / Kegiatan</option>
+                        <option value="keamanan">Keamanan & Ketertiban</option>
+                        <option value="keuangan">Informasi Keuangan</option>
+                        <option value="darurat">Darurat / Mendesak</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tanggal">Tanggal Publikasi/Kegiatan</label>
+                    <input type="date" id="tanggal" value="<?php echo date('Y-m-d'); ?>" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="penanggungJawab">Penanggung Jawab (Nama Pengurus)</label>
+                    <input type="text" id="penanggungJawab" placeholder="Contoh: Ketua RT, Bendahara, Seksi Keamanan" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="konten">Isi Lengkap Pengumuman</label>
+                    <textarea id="konten" placeholder="Tuliskan detail lengkap informasi yang ingin disampaikan kepada warga..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-paper-plane"></i> Publikasikan Pengumuman
+                </button>
+                
+            </form>
+        </div>
+        
+        <div class="back-button-container">
+            <a href="pengurus06_dashboard.html" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Kembali ke Dashboard
+            </a>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        <p>Portal Warga RT. 06 Reni Jaya</p>
+        <p>&copy; 2025 Hak Cipta Dilindungi.<br>Dikelola oleh Pengurus RT. 06</p>
+    </div>
+    
+    <div id="successAlert" class="custom-alert alert-success">
+        <div class="alert-content">
+            <i class="alert-icon fas fa-check-circle"></i>
+            <h3>Pengumuman Terkirim!</h3>
+            <p>Informasi berhasil dipublikasikan ke <a href="informasi.html" style="color:#007bff; font-weight:600;">halaman Warga</a> dan siap diakses.</p>
+            <button class="alert-btn" onclick="closeAlertAndRedirect('pengurus06_dashboard.html')">OK</button>
+        </div>
+    </div>
+    
+    <script>
+        // Fungsi untuk menutup alert custom
+        function closeCustomAlert(id) {
+            document.getElementById(id).classList.remove('show');
+        }
+        
+        // Fungsi untuk menutup alert dan redirect ke dashboard
+        function closeAlertAndRedirect(url) {
+            closeCustomAlert('successAlert');
+            window.location.href = url;
+        }
+
+        document.getElementById('announcementForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Mencegah form dikirim secara default
+
+            // ******************************************************************
+            // CATATAN: Karena ini adalah DEMO HTML statis, kita tidak benar-benar 
+            // menyimpan data ke database. Kita hanya menampilkan pesan sukses.
+            // Di implementasi nyata, di sini akan ada kode AJAX untuk mengirim 
+            // data ke server (misal: buat_pengumuman.php).
+            // ******************************************************************
+            
+            // Tampilkan Custom Success Alert
+            document.getElementById('successAlert').classList.add('show');
+            
+            // Reset Form setelah tampilan sukses (opsional)
+            this.reset();
+            
+            // Redirect otomatis setelah 4 detik (jika tombol OK tidak diklik)
+            setTimeout(function() {
+                if (document.getElementById('successAlert').classList.contains('show')) {
+                    window.location.href = "pengurus06_dashboard.html";
+                }
+            }, 4000); 
+        });
+    </script>
+
+</body>
+</html>
