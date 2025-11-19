@@ -9,202 +9,201 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
-/* CSS dari script Anda */
-    :root{
-        --primary: #1f6feb; /* Biru */
-        --accent: #e76f51; /* Oranye */
-        --success: #10b981; /* Hijau Sukses */
-        --error: #dc2626; /* Merah Error */
-        --bg: #f6f7fb;
-        --card: #ffffff;
-        --text-color: #0f172a;
-        --muted-color: #6b7280;
+/* CSS Styling */
+    :root{
+        --primary: #1f6feb; /* Biru */
+        --accent: #e76f51; /* Oranye */
+        --success: #10b981; /* Hijau Sukses */
+        --error: #dc2626; /* Merah Error */
+        --bg: #f6f7fb;
+        --card: #ffffff;
+        --text-color: #0f172a;
+        --muted-color: #6b7280;
         --loading: #d97706; /* Ditambahkan */
-    }
-    *{box-sizing:border-box}
-    body{
-        margin:0;font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Arial;
-        background:var(--bg);color:var(--text-color);-webkit-font-smoothing:antialiased;
-        padding: 20px;
-    }
+    }
+    *{box-sizing:border-box}
+    body{
+        margin:0;font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+        background:var(--bg);color:var(--text-color);-webkit-font-smoothing:antialiased;
+        padding: 20px;
+    }
 
-    .wrap{max-width:550px;margin:30px auto;}
-    .card{background:var(--card);padding:24px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.08)}
+    .wrap{max-width:550px;margin:30px auto;}
+    .card{background:var(--card);padding:24px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.08)}
 
-    .header-title h1{color:var(--primary); font-size: 24px; margin-bottom: 5px; font-weight: 700;}
-    .header-title p{color:var(--muted-color); font-size: 14px; margin-top: 0; margin-bottom: 25px;}
+    .header-title h1{color:var(--primary); font-size: 24px; margin-bottom: 5px; font-weight: 700;}
+    .header-title p{color:var(--muted-color); font-size: 14px; margin-top: 0; margin-bottom: 25px;}
 
-    label{display:block; margin-bottom: 6px; font-weight: 600; font-size: 13px; color: var(--text-color);}
-    input[type="date"], input[type="text"], input[type="number"], select{
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 15px;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        font-size: 14px;
-        transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    input:focus, select:focus{
-        border-color: var(--primary);
-        box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.1);
-        outline: none;
-    }
+    label{display:block; margin-bottom: 6px; font-weight: 600; font-size: 13px; color: var(--text-color);}
+    input[type="date"], input[type="text"], input[type="number"], select{
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus, select:focus{
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.1);
+        outline: none;
+    }
 
-    .form-group{margin-bottom: 20px;}
-    
-    .btn-group{
-        display: flex;
-        gap: 15px;
-        margin-top: 20px;
-    }
-    button{
-        flex: 1;
-        padding: 14px 10px;
-        border: none;
-        border-radius: 10px;
-        font-weight: 700;
-        cursor: pointer;
-        transition: background-color 0.3s, transform 0.1s, box-shadow 0.3s;
-        color: white;
-        font-size: 15px;
-        text-transform: uppercase;
-    }
-    
-    /* Button Pemasukan Style */
-    #submitIn{
-        background: var(--primary);
-        box-shadow: 0 4px 12px rgba(31, 111, 235, 0.3);
-    }
-    #submitIn:hover{
-        background: #195ac8;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(31, 111, 235, 0.5);
-    }
-    #submitIn:disabled {
-        background: #90b8e6;
-        cursor: not-allowed;
-        box-shadow: none;
-        transform: translateY(0);
-    }
+    .form-group{margin-bottom: 20px;}
+    
+    .btn-group{
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+    }
+    button{
+        flex: 1;
+        padding: 14px 10px;
+        border: none;
+        border-radius: 10px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.1s, box-shadow 0.3s;
+        color: white;
+        font-size: 15px;
+        text-transform: uppercase;
+    }
+    
+    /* Button Pemasukan Style */
+    #submitIn{
+        background: var(--primary);
+        box-shadow: 0 4px 12px rgba(31, 111, 235, 0.3);
+    }
+    #submitIn:hover{
+        background: #195ac8;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(31, 111, 235, 0.5);
+    }
+    #submitIn:disabled {
+        background: #90b8e6;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: translateY(0);
+    }
 
-    /* Button Pengeluaran Style */
-    #submitOut{
-        background: var(--accent);
-        box-shadow: 0 4px 12px rgba(231, 111, 81, 0.3);
-    }
-    #submitOut:hover{
-        background: #d4654a;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(231, 111, 81, 0.5);
-    }
-    #submitOut:disabled {
-        background: #f0a996;
-        cursor: not-allowed;
-        box-shadow: none;
-        transform: translateY(0);
-    }
+    /* Button Pengeluaran Style */
+    #submitOut{
+        background: var(--accent);
+        box-shadow: 0 4px 12px rgba(231, 111, 81, 0.3);
+    }
+    #submitOut:hover{
+        background: #d4654a;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(231, 111, 81, 0.5);
+    }
+    #submitOut:disabled {
+        background: #f0a996;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: translateY(0);
+    }
 
 
-    /* Notifikasi */
-    .notification{
-        padding: 15px;
-        border-radius: 8px;
-        margin-top: 25px;
-        font-weight: 600;
-        display: none;
-        align-items: center;
-        gap: 10px;
-        animation: slideIn 0.3s ease-out;
-    }
-    .success{background: #d1fae5; color: var(--success); border: 1px solid var(--success);}
-    .error{background: #fee2e2; color: var(--error); border: 1px solid var(--error);}
-    .loading{background: #fef3c7; color: var(--loading); border: 1px solid var(--loading);}
+    /* Notifikasi */
+    .notification{
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 25px;
+        font-weight: 600;
+        display: none;
+        align-items: center;
+        gap: 10px;
+        animation: slideIn 0.3s ease-out;
+    }
+    .success{background: #d1fae5; color: var(--success); border: 1px solid var(--success);}
+    .error{background: #fee2e2; color: var(--error); border: 1px solid var(--error);}
+    .loading{background: #fef3c7; color: var(--loading); border: 1px solid var(--loading);}
 
-    @keyframes slideIn {
-        from { opacity: 0; transform: translateY(-10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    
-    /* Style untuk form tambahan Koordinator */
-    #koordinatorGroup {
-        transition: all 0.3s ease-in-out;
-        overflow: hidden;
-        height: 0; 
-        opacity: 0;
-        padding-top: 0;
-    }
-    #koordinatorGroup.show {
-        height: auto;
-        opacity: 1;
-        padding-top: 10px;
-    }
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Style untuk form tambahan Koordinator */
+    #koordinatorGroup {
+        transition: all 0.3s ease-in-out;
+        overflow: hidden;
+        height: 0; 
+        opacity: 0;
+        padding-top: 0;
+    }
+    #koordinatorGroup.show {
+        height: auto;
+        opacity: 1;
+        padding-top: 10px;
+    }
 </style>
 </head>
 <body>
 
 <div class="wrap">
-    <div class="card">
-        <div class="header-title">
-            <h1><i class="fas fa-file-invoice-dollar"></i> Input Transaksi Keuangan RT 06</h1>
-            <p id="form-description">Masukkan rincian transaksi (Pemasukan atau Pengeluaran) untuk dicatat di Google Sheet.</p>
-        </div>
+    <div class="card">
+        <div class="header-title">
+            <h1><i class="fas fa-file-invoice-dollar"></i> Input Transaksi Keuangan RT 06</h1>
+            <p id="form-description">Masukkan rincian transaksi (Pemasukan atau Pengeluaran) untuk dicatat di Google Sheet.</p>
+        </div>
 
-        <form id="financeForm">
-            <div class="form-group">
-                <label for="tanggal">Tanggal Transaksi</label>
-                <input type="date" id="tanggal" name="Tanggal" required />
-            </div>
+        <form id="financeForm">
+            <div class="form-group">
+                <label for="tanggal">Tanggal Transaksi</label>
+                <input type="date" id="tanggal" name="Tanggal" required />
+            </div>
 
-            <div class="form-group">
-                <label for="kategori">Kategori</label>
-                <select id="kategori" name="Kategori" required>
-                    <option value="" disabled selected>Pilih Kategori Transaksi</option>
+            <div class="form-group">
+                <label for="kategori">Kategori</label>
+                <select id="kategori" name="Kategori" required>
+                    <option value="" disabled selected>Pilih Kategori Transaksi</option>
                     <option value="Saldo Bulan Sebelumnya">➡️ Saldo Bulan Sebelumnya</option>
-                    <option value="Iuran Warga">Iuran Warga</option>
-                    <option value="Donasi">Donasi/Sumbangan</option>
-                    <option value="Kas Sosial">Kas Sosial</option>
-                    <option value="Kegiatan">Kegiatan/Acara</option>
-                    <option value="Kebersihan">Kebersihan/Kemanan</option>
-                    <option value="Lainnya">Lainnya</option>
-                </select>
-            </div>
+                    <option value="Iuran Warga">Iuran Warga</option>
+                    <option value="Donasi">Donasi/Sumbangan</option>
+                    <option value="Kas Sosial">Kas Sosial</option>
+                    <option value="Kegiatan">Kegiatan/Acara</option>
+                    <option value="Kebersihan">Kebersihan/Kemanan</option>
+                    <option value="Lainnya">Lainnya</option>
+                </select>
+            </div>
 
-            <div class="form-group" id="koordinatorGroup">
-                <label for="koordinator">Koordinator Gang (Hanya untuk Iuran Warga)</label>
-                <select id="koordinator" name="Koordinator" disabled>
-                    <option value="" selected disabled>Memuat daftar koordinator...</option>
-                    </select>
-            </div>
-            <div class="form-group">
-                <label for="keterangan">Keterangan / Detail</label>
-                <input type="text" id="keterangan" name="Keterangan" placeholder="Contoh: Iuran rutin bulan November, Beli sapu dan pel" required />
-            </div>
-            
-            <div class="form-group">
-                <label for="nominal">Nominal (Hanya Angka, cth: 50000)</label>
-                <input type="number" id="nominal" name="Nominal" placeholder="Masukkan jumlah dalam Rupiah (tanpa titik atau koma)" required min="1" />
-            </div>
+            <div class="form-group" id="koordinatorGroup">
+                <label for="koordinator">Koordinator Gang (Hanya untuk Iuran Warga)</label>
+                <select id="koordinator" name="Koordinator" disabled>
+                    <option value="" selected disabled>Memuat daftar koordinator...</option>
+                    </select>
+            </div>
+            <div class="form-group">
+                <label for="keterangan">Keterangan / Detail</label>
+                <input type="text" id="keterangan" name="Keterangan" placeholder="Contoh: Iuran rutin bulan November, Beli sapu dan pel" required />
+            </div>
+            
+            <div class="form-group">
+                <label for="nominal">Nominal (Hanya Angka, cth: 50000)</label>
+                <input type="number" id="nominal" name="Nominal" placeholder="Masukkan jumlah dalam Rupiah (tanpa titik atau koma)" required min="1" />
+            </div>
 
-            <div class="btn-group">
-                <button type="button" id="submitIn" data-sheet="web_Pemasukan">
-                    <i class="fas fa-plus-circle"></i> Pemasukan
-                </button>
-                <button type="button" id="submitOut" data-sheet="web_Pengeluaran">
-                    <i class="fas fa-minus-circle"></i> Pengeluaran
-                </button>
-            </div>
-        </form>
+            <div class="btn-group">
+                <button type="button" id="submitIn" data-sheet="web_Pemasukan">
+                    <i class="fas fa-plus-circle"></i> Pemasukan
+                </button>
+                <button type="button" id="submitOut" data-sheet="web_Pengeluaran">
+                    <i class="fas fa-minus-circle"></i> Pengeluaran
+                </button>
+            </div>
+        </form>
 
-        <div id="notification" class="notification"></div>
-    </div>
+        <div id="notification" class="notification"></div>
+    </div>
 </div>
 
 <script>
 // ===============================================
-// KONFIGURASI ENDPOINT GOOGLE APPS SCRIPT
-// GANTI URL INI dengan URL DEPLOYMENT APPS SCRIPT Anda
+// ⚠️ GANTI URL INI dengan URL DEPLOYMENT APPS SCRIPT Anda yang baru
 // ===============================================
-const ENDPOINT_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbzhHJ8y54EFqSxR8JG3lESQWMOo2psmne1FgEYOq3b-0fst5zi8lKPLSTnS_N64zm1O5w/exec"; // GANTI DENGAN URL APPS SCRIPT ANDA!
+const ENDPOINT_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbwgQ-ENSsjNfh2gzitn1noXWMuo-bLOqYt_NUFR2zjK83_45XSUyXT7GQeFwRn5Uh6x3A/exec"; // GANTI DENGAN URL APPS SCRIPT ANDA!
 
 const form = document.getElementById('financeForm');
 const notification = document.getElementById('notification');
@@ -237,6 +236,7 @@ kategoriSelect.addEventListener('change', function() {
     koordinatorGroup.classList.remove('show');
     koordinatorSelect.required = false;
     koordinatorSelect.disabled = true;
+    koordinatorSelect.value = ""; // Reset nilai koordinator
     
     isSaldoMode = false; 
 
@@ -282,136 +282,136 @@ submitInBtn.addEventListener('click', () => submitForm(submitInBtn));
 submitOutBtn.addEventListener('click', () => submitForm(submitOutBtn));
 
 /**
- * Menampilkan notifikasi sukses atau error.
- */
+ * Menampilkan notifikasi sukses atau error.
+ */
 function showNotification(message, type) {
-    // Menggunakan Font Awesome icon
-    const iconClass = type === 'success' ? 'fas fa-check-circle' : (type === 'error' ? 'fas fa-exclamation-triangle' : 'fas fa-info-circle'); 
-    notification.innerHTML = `<i class="${iconClass}"></i> ${message}`;
-    notification.className = `notification ${type}`;
-    notification.style.display = 'flex';
-    setTimeout(() => {
-        notification.style.display = 'none';
-    }, 5000);
+    const iconClass = type === 'success' ? 'fas fa-check-circle' : (type === 'error' ? 'fas fa-exclamation-triangle' : 'fas fa-info-circle'); 
+    notification.innerHTML = `<i class="${iconClass}"></i> ${message}`;
+    notification.className = `notification ${type}`;
+    notification.style.display = 'flex';
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 5000);
 }
 
 /**
- * Mengambil daftar Koordinator dari Google Sheet.
- */
+ * Mengambil daftar Koordinator dari Google Sheet.
+ */
 async function fetchKoordinatorList() {
-    showNotification("Memuat daftar Koordinator...", "loading");
-    submitInBtn.disabled = true;
-    submitOutBtn.disabled = true;
+    showNotification("Memuat daftar Koordinator...", "loading");
+    submitInBtn.disabled = true;
+    submitOutBtn.disabled = true;
 
-    try {
-        const response = await fetch(`${ENDPOINT_APPS_SCRIPT}?action=getKoordinator`);
-        
-        if (!response.ok) { throw new Error(`HTTP error! status: ${response.status}`); }
-        
+    try {
+        const response = await fetch(`${ENDPOINT_APPS_SCRIPT}?action=getKoordinator`);
+        
+        if (!response.ok) { throw new Error(`HTTP error! status: ${response.status}`); }
+        
+        // Menggunakan response.text() dan JSON.parse() untuk penanganan error yang lebih baik
         const text = await response.text(); 
         const data = JSON.parse(text); 
-        
-        koordinatorSelect.innerHTML = '<option value="" selected disabled>Pilih Koordinator Gang</option>';
-        if (data && data.koordinatorList && data.koordinatorList.length > 0) {
-            data.koordinatorList.forEach(koordinator => {
-                const option = document.createElement('option');
-                option.value = koordinator;
-                option.textContent = koordinator;
-                koordinatorSelect.appendChild(option);
-            });
-            koordinatorDataLoaded = true;
-            showNotification("Daftar Koordinator berhasil dimuat.", "success");
-        } else {
-            koordinatorSelect.innerHTML = '<option value="" selected disabled>Tidak ada data koordinator ditemukan. Harap cek sheet ListKoordinator.</option>';
-            showNotification("Daftar Koordinator dimuat, tetapi kosong.", "error");
-        }
+        
+        koordinatorSelect.innerHTML = '<option value="" selected disabled>Pilih Koordinator Gang</option>';
+        if (data && data.koordinatorList && data.koordinatorList.length > 0) {
+            data.koordinatorList.forEach(koordinator => {
+                const option = document.createElement('option');
+                option.value = koordinator;
+                option.textContent = koordinator;
+                koordinatorSelect.appendChild(option);
+            });
+            koordinatorDataLoaded = true;
+            showNotification("Daftar Koordinator berhasil dimuat.", "success");
+        } else {
+            koordinatorSelect.innerHTML = '<option value="" selected disabled>Tidak ada data koordinator ditemukan. Harap cek sheet ListKoordinator.</option>';
+            showNotification("Daftar Koordinator dimuat, tetapi kosong.", "error");
+        }
 
-    } catch (error) {
-        console.error('Error fetching koordinator list:', error);
-        koordinatorSelect.innerHTML = '<option value="" selected disabled>Gagal memuat data.</option>';
-        showNotification(`Gagal memuat daftar koordinator. Cek URL Apps Script dan koneksi.`, "error");
-    } finally {
-        submitInBtn.disabled = false;
-        submitOutBtn.disabled = false;
-        kategoriSelect.dispatchEvent(new Event('change')); 
-    }
+    } catch (error) {
+        console.error('Error fetching koordinator list:', error);
+        koordinatorSelect.innerHTML = '<option value="" selected disabled>Gagal memuat data.</option>';
+        showNotification(`Gagal memuat daftar koordinator. Cek URL Apps Script atau jaringan.`, "error");
+    } finally {
+        submitInBtn.disabled = false;
+        submitOutBtn.disabled = false;
+        kategoriSelect.dispatchEvent(new Event('change')); 
+    }
 }
 
 
 /**
- * Menangani pengiriman form ke Google Apps Script (POST).
- */
+ * Menangani pengiriman form ke Google Apps Script (POST).
+ */
 async function submitForm(button) {
-    if (!form.checkValidity()) {
-        form.reportValidity();
-        showNotification("Mohon lengkapi semua data yang diperlukan pada formulir.", "error");
-        return;
-    }
-    
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        showNotification("Mohon lengkapi semua data yang diperlukan pada formulir.", "error");
+        return;
+    }
+    
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
     let targetSheet = button.getAttribute('data-sheet');
 
     // 1. Tentukan Sheet Tujuan (Override jika Saldo Mode)
     if (isSaldoMode) {
         data.Sheet = 'web_SaldoAwal';
-        data.Kategori = 'Saldo Awal';
+        data.Kategori = 'Saldo Awal'; // Ganti Kategori untuk konsistensi di sheet
     } else {
         data.Sheet = targetSheet;
     }
     
-    // 2. Format Data (Gabungkan Koordinator hanya jika bukan Saldo Mode)
+    // 2. Format Data
     if (data.Koordinator) {
         data.Keterangan = `[${data.Koordinator}] - ${data.Keterangan}`;
         delete data.Koordinator;
     }
     
-    // Format Tanggal dan Nominal
-    if (data.Tanggal) { data.Tanggal = data.Tanggal.split('-').reverse().join('/'); }
-    data.Nominal = parseInt(data.Nominal);
+    // Format Tanggal dan Nominal
+    if (data.Tanggal) { data.Tanggal = data.Tanggal.split('-').reverse().join('/'); }
+    data.Nominal = parseInt(data.Nominal);
 
-    // 3. Ubah UI Tombol (Loading State)
-    const originalTextIn = submitInBtn.innerHTML;
+    // 3. Ubah UI Tombol (Loading State)
+    const originalTextIn = submitInBtn.innerHTML;
     const originalTextOut = submitOutBtn.innerHTML;
-    const isPemasukan = data.Sheet === 'web_Pemasukan' || data.Sheet === 'web_SaldoAwal';
+    const isPemasukan = data.Sheet === 'web_Pemasukan' || data.Sheet === 'web_SaldoAwal';
     const typeLabel = isSaldoMode ? 'Saldo Awal' : (isPemasukan ? 'Pemasukan' : 'Pengeluaran');
-    
-    submitInBtn.disabled = true;
-    submitOutBtn.disabled = true;
-    button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Mengirim...`;
+    
+    submitInBtn.disabled = true;
+    submitOutBtn.disabled = true;
+    button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Mengirim...`;
 
-    // 4. Kirim Data ke Apps Script
-    try {
-        await fetch(ENDPOINT_APPS_SCRIPT, {
-            method: 'POST',
-            mode: 'no-cors', 
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        });
+    // 4. Kirim Data ke Apps Script
+    try {
+        await fetch(ENDPOINT_APPS_SCRIPT, {
+            method: 'POST',
+            mode: 'no-cors', 
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
 
-        showNotification(`Data ${typeLabel} berhasil dicatat di Sheet ${data.Sheet}!`, "success");
-        form.reset(); 
-        
-        // Reset tampilan dinamis
-        kategoriSelect.dispatchEvent(new Event('change'));
-    } catch (error) {
-        console.error('Error submitting form:', error);
-        showNotification(`Gagal mencatat data. Error Jaringan: ${error.message}. Cek koneksi atau URL Apps Script.`, "error");
-    } finally {
-        // Kembalikan UI Tombol
-        submitInBtn.innerHTML = originalTextIn;
-        submitOutBtn.innerHTML = originalTextOut;
-        submitInBtn.disabled = false;
-        submitOutBtn.disabled = false;
+        showNotification(`Data ${typeLabel} berhasil dicatat di Sheet ${data.Sheet}!`, "success");
+        form.reset(); 
+        
+        // Reset tampilan dinamis
         kategoriSelect.dispatchEvent(new Event('change'));
-    }
+    } catch (error) {
+        console.error('Error submitting form:', error);
+        showNotification(`Gagal mencatat data. Error Jaringan: ${error.message}. Cek koneksi atau URL Apps Script.`, "error");
+    } finally {
+        // Kembalikan UI Tombol
+        submitInBtn.innerHTML = originalTextIn;
+        submitOutBtn.innerHTML = originalTextOut;
+        submitInBtn.disabled = false;
+        submitOutBtn.disabled = false;
+        kategoriSelect.dispatchEvent(new Event('change'));
+    }
 }
 
 // Set tanggal default dan muat data koordinator saat halaman dimuat
 document.addEventListener('DOMContentLoaded', () => {
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('tanggal').value = today;
-    fetchKoordinatorList();
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('tanggal').value = today;
+    fetchKoordinatorList();
 });
 </script>
 </body>
