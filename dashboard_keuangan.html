@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+\<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="utf-8" />
@@ -12,8 +12,8 @@
 
 <style>
     /* ============================
-       GLOBAL VAR & BASE STYLING
-       ============================ */
+        GLOBAL VAR & BASE STYLING
+        ============================ */
     :root{
         --primary-deep: #004d40; /* Teal Dark */
         --primary-light: #005c5c; 
@@ -35,17 +35,19 @@
         -webkit-font-smoothing: antialiased;
         overflow-x: hidden;
     }
+    
+    /* MODIFIKASI: Margin negatif disesuaikan agar tidak terlalu besar di HP */
     .wrap {
         max-width: 1200px;
-        margin: -60px auto 60px auto; /* Margin negatif untuk menutupi header */
+        margin: -60px auto 60px auto; /* Default untuk Desktop */
         padding: 0 20px;
         position: relative;
         z-index: 10;
     }
 
     /* ============================
-       HEADER ELEGAN (PORTAL STYLE)
-       ============================ */
+        HEADER ELEGAN (PORTAL STYLE)
+        ============================ */
     .header-elegant {
         background: linear-gradient(135deg, #003636, #005c5c); 
         color: white;
@@ -114,8 +116,8 @@
     }
 
     /* ============================
-       CARD & GRID STYLING
-       ============================ */
+        CARD & GRID STYLING
+        ============================ */
     .card{
         background:var(--card);
         padding:24px;
@@ -135,12 +137,19 @@
     }
 
     /* Summary Cards */
+    /* MODIFIKASI: Grid 2 kolom di HP, 4 kolom di desktop */
     .summary-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Min 150px untuk HP */
         gap: 20px;
         margin-bottom: 30px;
     }
+    @media (min-width: 768px) {
+        .summary-grid {
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); /* 4 kolom di Desktop */
+        }
+    }
+    
     .summary-card {
         padding: 25px;
         border-radius: 12px;
@@ -164,9 +173,14 @@
         text-transform: uppercase;
     }
     .summary-card .value {
-        font-size: 28px;
+        font-size: 24px; /* Sedikit dikecilkan untuk HP */
         font-weight: 800;
         margin-top: 5px;
+    }
+    @media (min-width: 768px) {
+        .summary-card .value {
+            font-size: 28px;
+        }
     }
 
     /* Warna Kartu Disesuaikan dengan Palet Baru */
@@ -188,11 +202,19 @@
         border-collapse: collapse;
         margin-top: 15px;
     }
+    /* MODIFIKASI: Mengatur font yang lebih kecil pada tabel di HP */
     .transaction-table th, .transaction-table td {
-        padding: 12px 15px;
+        padding: 10px 12px;
         text-align: left;
-        font-size: 14px;
+        font-size: 13px; /* Dikecilkan untuk HP */
     }
+    @media (min-width: 768px) {
+        .transaction-table th, .transaction-table td {
+            padding: 12px 15px;
+            font-size: 14px;
+        }
+    }
+    
     .transaction-table th {
         background-color: #f1f5f9;
         color: var(--text-color);
@@ -254,21 +276,47 @@
     }
 
 
-    /* Responsif */
+    /* ============================
+       RESPONSIVITAS UTAMA (MOBILE FIRST)
+       ============================ */
     @media (max-width: 900px) {
+        /* Perubahan layout utama: Main content dan sidebar menjadi satu kolom */
         .dashboard-layout {
             grid-template-columns: 1fr;
         }
+        
+        /* Mengurangi margin negatif di HP agar wrap tidak terlalu masuk ke header */
         .wrap {
-            margin-top: -40px;
+            margin-top: -40px; 
+            padding: 0 15px; /* Mengurangi padding di sisi */
         }
     }
+    
     @media (max-width: 768px) {
         .title-elegant {
-            font-size: 2.2em;
+            font-size: 2em; /* Mengecilkan Judul */
         }
         .slogan-elegant {
-            font-size: 1em;
+            font-size: 0.9em; /* Mengecilkan Slogan */
+        }
+        
+        /* Tambahan: Mengatur padding header agar tidak terlalu tinggi di HP */
+        .header-elegant {
+            padding: 50px 20px 80px 20px;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+        }
+    }
+    
+    @media (max-width: 500px) {
+        /* Menghilangkan beberapa kolom pada tabel di layar sangat kecil */
+        .transaction-table th:nth-child(2), 
+        .transaction-table td:nth-child(2) { /* Kolom Kategori */
+            display: none;
+        }
+        .transaction-table th:nth-child(5), 
+        .transaction-table td:nth-child(5) { /* Kolom Jenis */
+            display: none;
         }
     }
 </style>
@@ -327,20 +375,21 @@
             
             <div class="card">
                 <h2><i class="fas fa-exchange-alt"></i> 10 Transaksi Terakhir</h2>
-                <table class="transaction-table">
-                    <thead>
-                        <tr>
-                            <th>Tanggal</th>
-                            <th>Kategori</th>
-                            <th>Keterangan</th>
-                            <th>Nominal</th>
-                            <th>Jenis</th>
-                        </tr>
-                    </thead>
-                    <tbody id="lastTransactionsBody">
-                        <tr><td colspan="5" style="text-align:center; color: var(--muted-color);">Memuat data transaksi...</td></tr>
-                    </tbody>
-                </table>
+                <div style="overflow-x: auto;"> <table class="transaction-table">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Kategori</th>
+                                <th>Keterangan</th>
+                                <th>Nominal</th>
+                                <th>Jenis</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lastTransactionsBody">
+                            <tr><td colspan="5" style="text-align:center; color: var(--muted-color);">Memuat data transaksi...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         
