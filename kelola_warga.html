@@ -66,6 +66,35 @@
             color: #888;
             text-align: center;
         }
+        /* --- CSS Responsiveness Modal Detail --- */
+        .detail-item-list {
+            display: flex; /* Default: Horizontal */
+            flex-direction: row;
+            align-items: flex-start;
+        }
+        .detail-label-modal {
+            flex-shrink: 0; 
+            width: 150px; 
+        }
+
+        /* Media Query untuk Layar HP (max-width 767px) */
+        @media (max-width: 767px) {
+            .detail-item-list {
+                flex-direction: column; /* Ubah ke Vertical */
+                align-items: stretch;
+            }
+            .detail-label-modal {
+                font-size: 1.05em;
+                margin-bottom: 3px; 
+                width: 100%; 
+                border-bottom: 1px dashed #eee; 
+                padding-bottom: 3px;
+            }
+            .list-group-item span:last-child {
+                padding-top: 5px; 
+                display: block; 
+            }
+        }
     </style>
 </head>
 <body>
@@ -126,7 +155,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -259,7 +288,7 @@
     }
 
     // =========================================================
-    // FUNGSI PEMBANGUN TABEL (DYNAMIC)
+    // FUNGSI PEMBANGUN TABEL (DYNAMIC, HANYA 4 KOLOM)
     // =========================================================
 
     function buildTableHTML(header, data, type) {
@@ -316,7 +345,7 @@
 
 
     // =========================================================
-    // FUNGSI MODAL DETAIL (TETAP MENAMPILKAN SEMUA KOLOM)
+    // FUNGSI MODAL DETAIL (RESPONSIVE)
     // =========================================================
 
     function showDetailModal(index, type) {
@@ -329,8 +358,9 @@
             const header = headers[i] ? String(headers[i]).toUpperCase().replace(/_/g, ' ') : `Kolom #${i + 1}`;
             const displayValue = value === '' || value === null || value === undefined ? '-' : value;
 
-            detailContent += `<li class="list-group-item d-flex justify-content-between align-items-start">
-                                <span class="fw-bold me-2" style="color: var(--color-primary);">${header}:</span>
+            // Menggunakan kelas kustom detail-item-list dan detail-label-modal untuk responsiveness
+            detailContent += `<li class="list-group-item detail-item-list">
+                                <span class="fw-bold me-2 detail-label-modal" style="color: var(--color-primary);">${header}:</span>
                                 <span>${displayValue}</span>
                               </li>`;
         });
