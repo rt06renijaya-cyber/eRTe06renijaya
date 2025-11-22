@@ -1,428 +1,629 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buat Pengumuman - Dashboard RT. 06</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Input Keuangan RT 06</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* CSS Styling */
+    /* Variabel Warna Baru */
+    :root{
+        --primary: #005c5c; /* Teal/Hijau Gelap untuk Primary/Pemasukan */
+        --primary-dark: #004d40;
+        --accent: #e76f51; /* Oranye untuk Pengeluaran (TETAP) */
+        --success: #28a745; /* Hijau Sukses */
+        --error: #dc3545; /* Merah Error */
+        --bg: #f8fafc; /* Latar belakang cerah */
+        --card: #ffffff;
+        --text-color: #333; /* Teks lebih gelap */
+        --muted-color: #6c757d;
+        --loading: #d97706;
+        --shadow-color: rgba(0, 0, 0, 0.15); /* Untuk bayangan card */
+        --menu-btn: #6c757d; /* Abu-abu untuk tombol menu */
+        --menu-btn-hover: #5a6268;
+    }
+    *{box-sizing:border-box}
+    body{
+        margin:0;
+        font-family:"Poppins", system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+        background:var(--bg);
+        color:var(--text-color);
+        -webkit-font-smoothing:antialiased;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .container {
+        max-width: 800px; 
+        margin: 0 auto;
+        padding: 0 20px;
+        flex-grow: 1;
+    }
+
+    /* === Header Elegant === */
+    .header-elegant {
+        background: linear-gradient(135deg, #003636, var(--primary));
+        color: white;
+        padding: 50px 20px 70px 20px;
+        border-bottom-left-radius: 60px;
+        border-bottom-right-radius: 60px;
+        position: relative;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        text-align: center;
+        overflow: hidden;
+    }
+
+    .header-elegant::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="p" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 0 0 L 10 10 M 10 0 L 0 10" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23p)"/></svg>') repeat;
+        opacity: 0.2;
+        z-index: 1;
+    }
+
+    .header-content {
+        position: relative;
+        z-index: 3;
+    }
     
-    <script>
-        // =========================================================================
-        // JAVASCRIPT AUTHENTIKASI SESI (Disesuaikan)
-        // =========================================================================
-        const CORRECT_USERNAME = "adminrt06"; 
-        function checkAuth() {
-            if (sessionStorage.getItem('auth') === CORRECT_USERNAME) {
-                return true;
-            } else {
-                // window.location.href = "pengurus06_login.html"; 
-                return true; // Untuk demo/pengujian, kita izinkan akses
-            }
-        }
-        if (!checkAuth()) { document.body.style.display = 'none'; }
-        
-        // =========================================================================
-        // WAJIB GANTI INI DENGAN URL DEPLOY APPS SCRIPT ANDA
-        // =========================================================================
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyHo1ZoAE9XWyy7XHAPVahAO_HugbWtcZdw86BtCktRYBHTBqAJLVg1pmf9QGl_AArexQ/exec'; 
-        
-        // --- Custom Alert Functions ---
-        function closeCustomAlert(id) {
-            document.getElementById(id).classList.remove('show');
-        }
-        
-        function showCustomAlert(id, title, message, isSuccess = true) {
-            const alertElement = document.getElementById(id);
-            const iconElement = alertElement.querySelector('.alert-icon');
-            const titleElement = alertElement.querySelector('h3');
-            const messageElement = alertElement.querySelector('p');
-            
-            // Atur warna dan ikon berdasarkan status
-            alertElement.classList.remove('alert-success', 'alert-error');
-            alertElement.classList.add(isSuccess ? 'alert-success' : 'alert-error');
-            iconElement.className = isSuccess ? 'alert-icon fas fa-check-circle' : 'alert-icon fas fa-times-circle';
-            titleElement.textContent = title;
-            messageElement.innerHTML = message;
-            
-            alertElement.classList.add('show');
-        }
+    .header-content h1 {
+        font-size: 2.5em; 
+        font-weight: 700;
+        margin: 0 0 5px 0;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    .header-content p {
+        font-size: 1em; 
+        opacity: 0.9; 
+        margin: 0;
+    }
 
-        // Fungsi untuk menutup alert dan redirect ke dashboard
-        function closeAlertAndRedirect(url) {
-            closeCustomAlert('successAlert');
-            window.location.href = url;
-        }
+    /* Card Form */
+    .form-card{
+        background-color: var(--card);
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px var(--shadow-color);
+        margin-top: -40px; 
+        position: relative;
+    }
 
-        // --- Form Submission Logic (MENGIRIM DATA) ---
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('announcementForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const form = e.target;
-                const submitBtn = form.querySelector('.btn-submit');
-                
-                // --- PERBAIKAN PENTING UNTUK MENGIRIM TEKS KATEGORI ---
-                const kategoriSelect = document.getElementById('kategori');
-                // Ambil TEXT yang dipilih (ini yang akan disimpan di Google Sheet)
-                const kategoriText = kategoriSelect.options[kategoriSelect.selectedIndex].text;
-                
-                // 1. Ambil Data Form
-                const data = {
-                    action: 'postAnnouncement', 
-                    judul: document.getElementById('judul').value,
-                    // Kita kirimkan data kategori_text yang berisi teks lengkap
-                    kategori: kategoriSelect.value, // (value: umum, keamanan, dll.)
-                    kategori_text: kategoriText, // (text: Umum / Kegiatan, Keamanan & Ketertiban)
-                    tanggal: document.getElementById('tanggal').value,
-                    penanggungJawab: document.getElementById('penanggungJawab').value,
-                    konten: document.getElementById('konten').value 
-                };
-                
-                // Tampilkan loading
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
-                submitBtn.disabled = true;
-                
-                // 2. Kirim data ke Apps Script menggunakan Fetch API (POST)
-                fetch(APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    body: new URLSearchParams(data)
-                })
-                .then(response => {
-                    // Cek jika response.status bukan 200 (OK), bisa jadi error CORS/URL/Deployment
-                    if (!response.ok) {
-                        throw new Error(`Error HTTP ${response.status}: Cek URL Apps Script dan Deployment.`);
-                    }
-                    return response.json();
-                })
-                .then(result => {
-                    if (result.result === 'success') {
-                        showCustomAlert('successAlert', 'Pengumuman Terkirim!', 
-                                         'Informasi berhasil dipublikasikan ke Google Sheet dan siap diakses oleh warga.');
-                        form.reset();
-                        // Redirect otomatis setelah 3 detik
-                        setTimeout(() => {
-                            window.location.href = "pengurus06.html";
-                        }, 3000);
+    /* === Form & Input Styling === */
+    label{
+        display:block; 
+        margin-bottom: 8px;
+        font-weight: 600; 
+        font-size: 1.1em;
+        color: var(--primary-dark);
+        text-align: left;
+    }
+    input[type="date"], input[type="text"], input[type="number"], select{
+        width: 100%;
+        padding: 12px 15px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1em;
+        transition: border-color 0.3s, box-shadow 0.3s;
+        box-sizing: border-box;
+        text-align: left;
+    }
+    input:focus, select:focus{
+        border-color: #007bff;
+        box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+        outline: none;
+    }
 
-                    } else {
-                        showCustomAlert('successAlert', 'Gagal Kirim!', 
-                                         `Terjadi kesalahan saat menyimpan data: ${result.message || 'Unknown Error'}`, false);
-                    }
-                })
-                .catch(error => {
-                    showCustomAlert('successAlert', 'Kesalahan Jaringan!', 
-                                     `Tidak dapat terhubung ke server Apps Script. Detail Error: ${error.message}`, false);
-                    console.error('Fetch Error:', error);
-                })
-                .finally(() => {
-                    // Hanya reset tombol jika tidak ada redirect yang terjadi
-                    if (!document.getElementById('successAlert').classList.contains('show')) {
-                        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Publikasikan Pengumuman';
-                        submitBtn.disabled = false;
-                    }
-                });
-            });
-        });
-    </script>
+    .form-group{margin-bottom: 20px;}
     
-    <style>
-        /* ============================
-           GLOBAL & HEADER STYLING 
-           ============================= */
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f8fafc;
-            color: #333;
-            line-height: 1.6;
-        }
+    /* === Button Styling (Submit) === */
+    .btn-group{
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+    }
+    
+    button{
+        flex: 1;
+        padding: 15px 10px;
+        border: none;
+        border-radius: 50px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+        color: white;
+        font-size: 1.1em;
+        text-transform: uppercase;
+        display: flex; 
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    /* Button Pemasukan Style */
+    #submitIn{
+        background: var(--primary);
+        box-shadow: 0 6px 15px rgba(0, 92, 92, 0.4);
+    }
+    #submitIn:hover{
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 92, 92, 0.6);
+    }
+    #submitIn:disabled {
+        background: #609c9c;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: translateY(0);
+    }
 
-        .container {
-            max-width: 800px; 
-            margin: 0 auto;
+    /* Button Pengeluaran Style */
+    #submitOut{
+        background: var(--accent);
+        box-shadow: 0 4px 12px rgba(231, 111, 81, 0.3);
+    }
+    #submitOut:hover{
+        background: #d4654a;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(231, 111, 81, 0.5);
+    }
+    #submitOut:disabled {
+        background: #f0a996;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: translateY(0);
+    }
+
+    /* === Tombol Menu (Link) Styling === */
+    .menu-btn-container {
+        margin-top: 30px;
+        text-align: center;
+    }
+    .menu-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 25px;
+        background-color: var(--menu-btn);
+        color: white;
+        text-decoration: none;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1em;
+        transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+        gap: 8px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+    .menu-link:hover {
+        background-color: var(--menu-btn-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+    }
+
+    /* Notifikasi Loading */
+    .notification{
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 25px;
+        font-weight: 600;
+        display: none;
+        align-items: center;
+        gap: 10px;
+        animation: slideIn 0.3s ease-out;
+    }
+    .success{background: #d4edda; color: var(--success); border: 1px solid var(--success);}
+    .error{background: #f8d7da; color: var(--error); border: 1px solid var(--error);}
+    .loading{background: #fff3cd; color: var(--loading); border: 1px solid var(--loading);}
+
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Koordinator Group */
+    #koordinatorGroup {
+        transition: all 0.3s ease-in-out;
+        overflow: hidden;
+        height: 0; 
+        opacity: 0;
+        padding-top: 0;
+    }
+    #koordinatorGroup.show {
+        height: auto;
+        opacity: 1;
+        padding-top: 10px;
+    }
+
+    /* Custom Alert Styling (Tidak diubah) */
+    .custom-alert {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background-color: rgba(0, 0, 0, 0.7); 
+        display: none; justify-content: center; align-items: center;
+        z-index: 1000; opacity: 0; transition: opacity 0.3s ease;
+    }
+    .custom-alert.show { display: flex; opacity: 1; }
+    .alert-content {
+        background-color: white; padding: 40px 30px; border-radius: 15px;
+        max-width: 320px; text-align: center; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); 
+        transform: scale(0.7); 
+        transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    .custom-alert.show .alert-content { transform: scale(1); }
+    .alert-icon {
+        font-size: 5em; margin-bottom: 20px; animation: pulse 1.5s infinite; 
+    }
+    .alert-success .alert-icon { color: var(--success); text-shadow: 0 0 15px rgba(40, 167, 69, 0.5); }
+    .alert-error .alert-icon { color: var(--error); text-shadow: 0 0 15px rgba(220, 53, 69, 0.5); }
+    .alert-content h3 { margin: 0 0 10px 0; font-size: 1.8em; font-weight: 700; color: #333; }
+    .alert-content p { margin: 0 0 25px 0; color: #6c757d; font-size: 1em; }
+    .alert-btn {
+        background-color: #007bff; color: white; padding: 10px 25px; border: none;
+        border-radius: 50px; cursor: pointer; font-weight: 600;
+        transition: background-color 0.3s, transform 0.1s;
+    }
+    .alert-btn:hover { background-color: #0056b3; transform: translateY(-2px); }
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    /* === FOOTER === */
+    .footer {
+        background: linear-gradient(135deg, #002e28, var(--primary-dark));
+        color: #e0ffff;
+        text-align: center;
+        padding: 40px 15px;
+        border-top-left-radius: 30px;
+        border-top-right-radius: 30px;
+        box-shadow: 0 -5px 15px rgba(0,0,0,0.2);
+        margin-top: 50px;
+    }
+    .footer p { margin: 5px 0; font-size: 0.9em; opacity: 0.9; }
+    .footer a { color: #ffc107; text-decoration: none; transition: color 0.3s; }
+    .footer a:hover { color: #fff; }
+
+    /* Responsive */
+    @media(max-width: 768px) {
+        .form-card {
             padding: 30px 20px;
         }
-
-        .header-elegant {
-            background: linear-gradient(135deg, #003636, #005c5c);
-            color: white;
-            padding: 50px 20px 70px 20px;
-            border-bottom-left-radius: 60px;
-            border-bottom-right-radius: 60px;
-            position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            text-align: center;
-            overflow: hidden;
-        }
-
-        .header-elegant::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="p" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 0 0 L 10 10 M 10 0 L 0 10" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23p)"/></svg>') repeat;
-            opacity: 0.2;
-            z-index: 1;
-        }
-
-        .header-content {
-            position: relative;
-            z-index: 3;
-        }
-        
         .header-content h1 {
-            font-size: 2.5em; 
-            font-weight: 700;
-            margin: 0 0 5px 0;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            font-size: 2em;
         }
-
-        .breadcrumb {
-            margin-bottom: 10px;
-            font-size: 0.9em;
-            opacity: 0.9;
-            color: #d1e5e5;
+        .btn-group {
+            flex-direction: column;
         }
-        .breadcrumb a {
-            color: #ffc107;
-            text-decoration: none;
-        }
-        .breadcrumb a:hover {
-            text-decoration: underline;
-        }
-
-        /* ============================
-           FORM STYLING
-           ============================= */
-        .form-card {
-            background-color: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-            margin-top: -40px; 
-            position: relative;
-            text-align: left;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #004d40;
-            font-size: 1.1em;
-        }
-
-        .form-group input[type="text"],
-        .form-group input[type="date"],
-        .form-group select,
-        .form-group textarea {
+        button {
             width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 1em;
-            transition: border-color 0.3s, box-shadow 0.3s;
         }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
-            outline: none;
-        }
-        
-        .form-group textarea {
-            resize: vertical;
-            min-height: 150px;
-        }
-
-        /* Button Utama (Kirim) */
-        .btn-submit {
-            background-color: #28a745;
-            color: white;
-            padding: 15px 40px;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 1.1em;
-            font-weight: 600;
-            text-transform: uppercase;
-            box-shadow: 0 6px 15px rgba(40, 167, 69, 0.4);
-            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
-            width: 100%; 
-        }
-        .btn-submit:hover {
-            background-color: #1e7e34;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.5);
-        }
-
-        /* Kembali Button */
-        .back-button-container {
-            text-align: center;
-            margin-top: 30px;
-        }
-        .btn-back {
-            display: inline-block;
-            background-color: #6c757d;
-            color: white;
-            padding: 10px 25px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: background-color 0.3s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        .btn-back:hover {
-            background-color: #5a6268;
-        }
-
-        /* Custom Alert Styling */
-        .custom-alert {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.7); 
-            display: none; justify-content: center; align-items: center;
-            z-index: 1000; opacity: 0; transition: opacity 0.3s ease;
-        }
-        .custom-alert.show { display: flex; opacity: 1; }
-        .alert-content {
-            background-color: white; padding: 40px 30px; border-radius: 15px;
-            max-width: 320px; text-align: center; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); 
-            transform: scale(0.7); 
-            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-        .custom-alert.show .alert-content { transform: scale(1); }
-        .alert-icon {
-            font-size: 5em; margin-bottom: 20px; animation: pulse 1.5s infinite; 
-        }
-        .alert-success .alert-icon { color: #28a745; text-shadow: 0 0 15px rgba(40, 167, 69, 0.5); }
-        .alert-error .alert-icon { color: #dc3545; text-shadow: 0 0 15px rgba(220, 53, 69, 0.5); }
-        .alert-content h3 { margin: 0 0 10px 0; font-size: 1.8em; font-weight: 700; color: #333; }
-        .alert-content p { margin: 0 0 25px 0; color: #6c757d; font-size: 1em; }
-        .alert-btn {
-            background-color: #007bff; color: white; padding: 10px 25px; border: none;
-            border-radius: 50px; cursor: pointer; font-weight: 600;
-            transition: background-color 0.3s, transform 0.1s;
-        }
-        .alert-btn:hover { background-color: #0056b3; transform: translateY(-2px); }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        /* FOOTER */
-        .footer {
-            background: linear-gradient(135deg, #002e28, #004d40);
-            color: #e0ffff;
-            text-align: center;
-            padding: 40px 15px;
-            border-top-left-radius: 30px;
-            border-top-right-radius: 30px;
-            box-shadow: 0 -5px 15px rgba(0,0,0,0.2);
-            margin-top: 50px;
-        }
-        .footer p { margin: 5px 0; font-size: 0.9em; opacity: 0.9; }
-        .footer a { color: #ffc107; text-decoration: none; transition: color 0.3s; }
-        .footer a:hover { color: #fff; }
-
-        /* Responsive */
-        @media(max-width: 768px) {
-            .form-card {
-                padding: 30px 20px;
-            }
-            .header-content h1 {
-                font-size: 2em;
-            }
-        }
-    </style>
+    }
+</style>
 </head>
-
 <body>
 
-    <div class="header-elegant">
-        <div class="header-content">
-            <div class="breadcrumb">
-                <a href="pengurus06.html">Dashboard</a> &gt; Kirim Pengumuman
-            </div>
-            <h1>Kirim Pengumuman Instan</h1>
-            <p>Sampaikan informasi penting dan mendesak langsung ke portal warga.</p>
-        </div>
+<div class="header-elegant">
+    <div class="header-content">
+        <h1><i class="fas fa-file-invoice-dollar"></i> Input Transaksi Keuangan RT 06</h1>
+        <p id="form-description">Masukkan rincian transaksi (Pemasukan atau Pengeluaran) untuk dicatat di Google Sheet.</p>
     </div>
+</div>
 
-    <div class="container">
-        
-        <div class="form-card">
-            <form id="announcementForm">
-                
-                <div class="form-group">
-                    <label for="judul">Judul Pengumuman</label>
-                    <input type="text" id="judul" name="judul" placeholder="Contoh: Jadwal Kerja Bakti atau Rapat Rutin" required>
-                </div>
+<div class="container">
+    <div class="form-card">
+        <form id="financeForm">
+            <div class="form-group">
+                <label for="tanggal">Tanggal Transaksi</label>
+                <input type="date" id="tanggal" name="Tanggal" required />
+            </div>
 
-                <div class="form-group">
-                    <label for="kategori">Kategori</label>
-                    <select id="kategori" name="kategori" required>
-                        <option value="">Pilih Kategori</option>
-                        <option value="umum">Umum / Kegiatan</option>
-                        <option value="keamanan">Keamanan & Ketertiban</option>
-                        <option value="keuangan">Informasi Keuangan</option>
-                        <option value="darurat">Darurat / Mendesak</option>
+            <div class="form-group">
+                <label for="kategori">Kategori</label>
+                <select id="kategori" name="Kategori" required>
+                    <option value="" disabled selected>Pilih Kategori Transaksi</option>
+                    <option value="Saldo Bulan Sebelumnya">➡️ Saldo Bulan Sebelumnya</option>
+                    <option value="Iuran Warga">Iuran Warga</option>
+                    <option value="Donasi">Donasi/Sumbangan</option>
+                    <option value="Kas Sosial">Kas Sosial</option>
+                    <option value="Kegiatan">Kegiatan/Acara</option>
+                    <option value="Kebersihan">Kebersihan/Kemanan</option>
+                    <option value="Lainnya">Lainnya</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="koordinatorGroup">
+                <label for="koordinator">Koordinator Gang (Hanya untuk Iuran Warga)</label>
+                <select id="koordinator" name="Koordinator" disabled>
+                    <option value="" selected disabled>Memuat daftar koordinator...</option>
                     </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="tanggal">Tanggal Publikasi/Kegiatan</label>
-                    <input type="date" id="tanggal" name="tanggal" value="2025-11-22" required>
-                </div>
+            </div>
+            <div class="form-group">
+                <label for="keterangan">Keterangan / Detail</label>
+                <input type="text" id="keterangan" name="Keterangan" placeholder="Contoh: Iuran rutin bulan November, Beli sapu dan pel" required />
+            </div>
+            
+            <div class="form-group">
+                <label for="nominal">Nominal (Hanya Angka, cth: 50000)</label>
+                <input type="number" id="nominal" name="Nominal" placeholder="Masukkan jumlah dalam Rupiah (tanpa titik atau koma)" required min="1" />
+            </div>
 
-                <div class="form-group">
-                    <label for="penanggungJawab">Penanggung Jawab (Nama Pengurus)</label>
-                    <input type="text" id="penanggungJawab" name="penanggungJawab" placeholder="Contoh: Ketua RT, Bendahara, Seksi Keamanan" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="konten">Isi Lengkap Pengumuman</label>
-                    <textarea id="konten" name="konten" placeholder="Tuliskan detail lengkap informasi yang ingin disampaikan kepada warga..." required></textarea>
-                </div>
-
-                <button type="submit" class="btn-submit">
-                    <i class="fas fa-paper-plane"></i> Publikasikan Pengumuman
+            <div class="btn-group">
+                <button type="button" id="submitIn" data-sheet="web_Pemasukan">
+                    <i class="fas fa-plus-circle"></i> Pemasukan
                 </button>
-                
-            </form>
-        </div>
+                <button type="button" id="submitOut" data-sheet="web_Pengeluaran">
+                    <i class="fas fa-minus-circle"></i> Pengeluaran
+                </button>
+            </div>
+        </form>
         
-        <div class="back-button-container">
-            <a href="pengurus06.html" class="btn-back">
-                <i class="fas fa-arrow-left"></i> Kembali ke Dashboard
+        <div id="notification" class="notification"></div> 
+
+        <div class="menu-btn-container">
+            <a href="#" id="menuLinkAbove" class="menu-link">
+                <i class="fas fa-home"></i> Kembali ke Menu Utama
             </a>
         </div>
+        
+    </div>
+</div>
 
+<div id="resultAlert" class="custom-alert">
+    <div class="alert-content">
+        <i class="alert-icon"></i>
+        <h3 id="alert-title"></h3>
+        <p id="alert-message"></p>
+        <button class="alert-btn" onclick="closeCustomAlert('resultAlert')">OK, Mengerti</button>
     </div>
+</div>
 
-    <div class="footer">
-        <p>Portal Warga RT. 06 Reni Jaya</p>
-        <p>&copy; 2025 Hak Cipta Dilindungi.<br>Dikelola oleh Pengurus RT. 06</p>
-    </div>
+<footer class="footer">
+    <p>
+        <a href="#" id="menuLinkFooter"><i class="fas fa-home"></i> Menu Utama</a> | &copy; 2025 RT 06 Management System
+    </p>
+    <p>Ditenagai oleh Google Apps Script & HTML</p>
+</footer>
+
+<script>
+// ===============================================
+// ⚠️ GANTI URL INI dengan URL DEPLOYMENT APPS SCRIPT Anda yang baru
+// ===============================================
+const ENDPOINT_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbwgQ-ENSsjNfh2gzitn1noXWMuo-bLOqYt_NUFR2zjK83_45XSUyXT7GQeFwRn5Uh6x3A/exec"; // GANTI DENGAN URL APPS SCRIPT ANDA!
+
+// 💡 GANTI URL MENU UTAMA DI SINI 💡
+const MAIN_MENU_URL = "pengurus06.html"; 
+
+const form = document.getElementById('financeForm');
+const loadingNotification = document.getElementById('notification'); 
+const submitInBtn = document.getElementById('submitIn');
+const submitOutBtn = document.getElementById('submitOut');
+const kategoriSelect = document.getElementById('kategori');
+const koordinatorGroup = document.getElementById('koordinatorGroup');
+const koordinatorSelect = document.getElementById('koordinator');
+const keteranganInput = document.getElementById('keterangan');
+const formDescription = document.getElementById('form-description');
+const nominalInput = document.getElementById('nominal');
+
+// Tambahan untuk tombol menu
+document.getElementById('menuLinkAbove').href = MAIN_MENU_URL;
+document.getElementById('menuLinkFooter').href = MAIN_MENU_URL;
+
+
+let koordinatorDataLoaded = false;
+let isSaldoMode = false;
+
+// --- Custom Alert Functions ---
+function closeCustomAlert(id) {
+    document.getElementById(id).classList.remove('show');
+}
+
+function showCustomAlert(id, title, message, isSuccess = true) {
+    const alertElement = document.getElementById(id);
+    const iconElement = alertElement.querySelector('.alert-icon');
+    const titleElement = alertElement.querySelector('#alert-title');
+    const messageElement = alertElement.querySelector('#alert-message');
     
-    <div id="successAlert" class="custom-alert alert-success">
-        <div class="alert-content">
-            <i class="alert-icon fas fa-check-circle"></i>
-            <h3>Pengumuman Terkirim!</h3>
-            <p>Informasi berhasil dipublikasikan ke Google Sheet dan siap diakses oleh warga.</p>
-            <button class="alert-btn" onclick="closeAlertAndRedirect('pengurus06.html')">OK</button>
-        </div>
-    </div>
+    alertElement.classList.remove('alert-success', 'alert-error');
+    alertElement.classList.add(isSuccess ? 'alert-success' : 'alert-error');
+    iconElement.className = isSuccess ? 'alert-icon fas fa-check-circle' : 'alert-icon fas fa-times-circle';
+    titleElement.textContent = title;
+    messageElement.innerHTML = message;
     
-    </body>
+    alertElement.classList.add('show');
+}
+
+
+// --- Logika Kategori Dinamis ---
+kategoriSelect.addEventListener('change', function() {
+    const selectedCategory = this.value;
+    
+    submitInBtn.style.display = 'flex';
+    submitOutBtn.style.display = 'flex';
+    submitInBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Pemasukan';
+    submitOutBtn.innerHTML = '<i class="fas fa-minus-circle"></i> Pengeluaran';
+    submitInBtn.setAttribute('data-sheet', 'web_Pemasukan');
+    nominalInput.min = "1";
+    formDescription.textContent = 'Masukkan rincian transaksi (Pemasukan atau Pengeluaran) untuk dicatat di Google Sheet.';
+    
+    koordinatorGroup.classList.remove('show');
+    koordinatorSelect.required = false;
+    koordinatorSelect.disabled = true;
+    koordinatorSelect.value = ""; 
+    
+    isSaldoMode = false; 
+
+    if (selectedCategory === 'Iuran Warga' && koordinatorDataLoaded) {
+        koordinatorGroup.classList.add('show');
+        koordinatorSelect.required = true;
+        koordinatorSelect.disabled = false;
+        keteranganInput.placeholder = "Cth: Iuran rutin bulan November 2025";
+        submitInBtn.disabled = false;
+        submitOutBtn.disabled = false;
+        
+    } else if (selectedCategory === 'Saldo Bulan Sebelumnya') {
+        isSaldoMode = true;
+        
+        submitOutBtn.style.display = 'none';
+        submitInBtn.innerHTML = '<i class="fas fa-money-check-alt"></i> Input Saldo Awal';
+        submitInBtn.setAttribute('data-sheet', 'web_SaldoAwal');
+        submitInBtn.disabled = false;
+        
+        nominalInput.min = "0"; 
+        keteranganInput.placeholder = "Contoh: Saldo Akhir Oktober 2025";
+        formDescription.textContent = 'Mode Saldo Awal: Data akan dicatat sebagai Saldo Awal Bulanan.';
+        
+        const today = new Date(document.getElementById('tanggal').value || Date.now());
+        const d = new Date(today.getFullYear(), today.getMonth(), 1); 
+        d.setMonth(d.getMonth() - 1); 
+        const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        keteranganInput.value = `Saldo Akhir ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+
+    } else {
+        keteranganInput.placeholder = "Contoh: Beli sapu dan pel, Donasi untuk korban banjir";
+        submitInBtn.disabled = false;
+        submitOutBtn.disabled = false;
+    }
+});
+
+submitInBtn.addEventListener('click', () => submitForm(submitInBtn));
+submitOutBtn.addEventListener('click', () => submitForm(submitOutBtn));
+
+/**
+ * Menampilkan notifikasi loading (hanya untuk koordinator)
+ */
+function showLoadingNotification(message, type) {
+    const iconClass = type === 'success' ? 'fas fa-check-circle' : (type === 'error' ? 'fas fa-exclamation-triangle' : 'fas fa-info-circle'); 
+    loadingNotification.innerHTML = `<i class="${iconClass}"></i> ${message}`;
+    loadingNotification.className = `notification ${type}`;
+    loadingNotification.style.display = 'flex';
+    if (type !== 'loading') {
+        setTimeout(() => {
+            loadingNotification.style.display = 'none';
+        }, 5000);
+    }
+}
+
+
+/**
+ * Mengambil daftar Koordinator dari Google Sheet.
+ */
+async function fetchKoordinatorList() {
+    showLoadingNotification("Memuat daftar Koordinator...", "loading");
+    submitInBtn.disabled = true;
+    submitOutBtn.disabled = true;
+
+    try {
+        const response = await fetch(`${ENDPOINT_APPS_SCRIPT}?action=getKoordinator`);
+        
+        if (!response.ok) { throw new Error(`HTTP error! status: ${response.status}`); }
+        
+        const text = await response.text(); 
+        const data = JSON.parse(text); 
+        
+        koordinatorSelect.innerHTML = '<option value="" selected disabled>Pilih Koordinator Gang</option>';
+        if (data && data.koordinatorList && data.koordinatorList.length > 0) {
+            data.koordinatorList.forEach(koordinator => {
+                const option = document.createElement('option');
+                option.value = koordinator;
+                option.textContent = koordinator;
+                koordinatorSelect.appendChild(option);
+            });
+            koordinatorDataLoaded = true;
+            showLoadingNotification("Daftar Koordinator berhasil dimuat.", "success");
+        } else {
+            koordinatorSelect.innerHTML = '<option value="" selected disabled>Tidak ada data koordinator ditemukan. Harap cek sheet ListKoordinator.</option>';
+            showLoadingNotification("Daftar Koordinator dimuat, tetapi kosong.", "error");
+        }
+
+    } catch (error) {
+        console.error('Error fetching koordinator list:', error);
+        koordinatorSelect.innerHTML = '<option value="" selected disabled>Gagal memuat data.</option>';
+        showLoadingNotification(`Gagal memuat daftar koordinator. Cek URL Apps Script atau jaringan.`, "error");
+    } finally {
+        submitInBtn.disabled = false;
+        submitOutBtn.disabled = false;
+        kategoriSelect.dispatchEvent(new Event('change')); 
+    }
+}
+
+
+/**
+ * Menangani pengiriman form ke Google Apps Script (POST).
+ */
+async function submitForm(button) {
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        showCustomAlert('resultAlert', "Formulir Tidak Lengkap", "Mohon lengkapi semua data yang diperlukan pada formulir.", false);
+        return;
+    }
+    
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    let targetSheet = button.getAttribute('data-sheet');
+
+    if (isSaldoMode) {
+        data.Sheet = 'web_SaldoAwal';
+        data.Kategori = 'Saldo Awal';
+    } else {
+        data.Sheet = targetSheet;
+    }
+    
+    if (data.Koordinator) {
+        data.Keterangan = `[${data.Koordinator}] - ${data.Keterangan}`;
+        delete data.Koordinator;
+    }
+    
+    if (data.Tanggal) { data.Tanggal = data.Tanggal.split('-').reverse().join('/'); }
+    data.Nominal = parseInt(data.Nominal);
+
+    const originalTextIn = submitInBtn.innerHTML;
+    const originalTextOut = submitOutBtn.innerHTML;
+    const isPemasukan = data.Sheet === 'web_Pemasukan' || data.Sheet === 'web_SaldoAwal';
+    const typeLabel = isSaldoMode ? 'Saldo Awal' : (isPemasukan ? 'Pemasukan' : 'Pengeluaran');
+    
+    submitInBtn.disabled = true;
+    submitOutBtn.disabled = true;
+    button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Mengirim...`;
+
+    try {
+        await fetch(ENDPOINT_APPS_SCRIPT, {
+            method: 'POST',
+            mode: 'no-cors', 
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        showCustomAlert('resultAlert', "Transaksi Berhasil Dicatat!", 
+                        `Data ${typeLabel} sebesar **Rp ${data.Nominal.toLocaleString('id-ID')}** telah berhasil dicatat di Google Sheet.`, true);
+        
+        form.reset(); 
+        kategoriSelect.dispatchEvent(new Event('change'));
+
+    } catch (error) {
+        console.error('Error submitting form:', error);
+        showCustomAlert('resultAlert', "Kesalahan Jaringan/Server!", 
+                        `Gagal mencatat data. Detail Error: ${error.message}. Cek koneksi atau URL Apps Script.`, false);
+    } finally {
+        submitInBtn.innerHTML = originalTextIn;
+        submitOutBtn.innerHTML = originalTextOut;
+        submitInBtn.disabled = false;
+        submitOutBtn.disabled = false;
+        kategoriSelect.dispatchEvent(new Event('change'));
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('tanggal').value = today;
+    fetchKoordinatorList();
+});
+</script>
+</body>
 </html>
