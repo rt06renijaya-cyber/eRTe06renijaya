@@ -270,6 +270,61 @@
                 letter-spacing: 1px;
             }
         }
+
+        /* ============================
+           POP-UP / MODAL STYLING
+           ============================= */
+        .modal-info {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.8); 
+            display: none; justify-content: center; align-items: center;
+            z-index: 1000;
+        }
+        .modal-info.show { display: flex; }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #f0fdf4, #ccfbf1); /* Gradasi background lembut */
+            padding: 30px; border-radius: 15px;
+            max-width: 90%; width: 450px; text-align: left;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4); 
+            transform: scale(0.9); opacity: 0;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+            border: 4px solid #065f46; /* Border hijau tua */
+        }
+        
+        .modal-info.show .modal-content { transform: scale(1); opacity: 1; }
+
+        .modal-header {
+            border-bottom: 2px solid #065f46;
+            padding-bottom: 15px; margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            margin: 0; color: #065f46; font-size: 1.8em;
+            display: flex; align-items: center;
+        }
+        .modal-header i { margin-right: 10px; font-size: 1.2em; }
+        
+        .modal-body p { margin-bottom: 10px; color: #1f2937; }
+        .modal-body strong { color: #065f46; }
+        .modal-body .announcement-title { font-size: 1.4em; font-weight: 700; color: #007bff; margin-top: 0; margin-bottom: 15px;}
+        .modal-body .announcement-content {
+            background-color: #ffffff;
+            padding: 15px; border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            white-space: pre-wrap; /* Mempertahankan format baris baru */
+        }
+
+        .modal-footer {
+            margin-top: 25px; text-align: center;
+        }
+        
+        .btn-close-modal {
+            background-color: #007bff; color: white; padding: 10px 20px;
+            border: none; border-radius: 50px; cursor: pointer;
+            font-weight: 600; transition: background-color 0.3s, transform 0.1s;
+        }
+        .btn-close-modal:hover { background-color: #0056b3; transform: translateY(-2px); }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
@@ -363,8 +418,30 @@
         <p>&copy; 2025 Hak Cipta Dilindungi.<br>Dikelola oleh Pengurus RT. 06 | <a href="#">Kebijakan Privasi</a></p>
     </div>
 
+    <div id="infoModal" class="modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-bullhorn"></i> PENGUMUMAN TERBARU</h3>
+            </div>
+            <div class="modal-body">
+                <p class="announcement-title" id="modalJudul"></p>
+                <p><strong>Tanggal Kegiatan:</strong> <span id="modalTanggal"></span></p>
+                <p><strong>Kategori:</strong> <span id="modalKategori"></span></p>
+                <p><strong>Penanggung Jawab:</strong> <span id="modalPenanggungJawab"></span></p>
+                <div class="announcement-content" id="modalKonten"></div>
+                <p style="margin-top: 15px; font-size: 0.85em; color: #6b7280;">Dipublikasikan pada: <span id="modalTimestamp"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-close-modal" onclick="closeInfoModal()">
+                    <i class="fas fa-check"></i> Mengerti, Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
+
 
 
 
