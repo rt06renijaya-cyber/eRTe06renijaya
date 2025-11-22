@@ -106,6 +106,7 @@
         // WAJIB GANTI INI DENGAN URL DEPLOY APPS SCRIPT ANDA
         // =========================================================================
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyHo1ZoAE9XWyy7XHAPVahAO_HugbWtcZdw86BtCktRYBHTBqAJLVg1pmf9QGl_AArexQ/exec'; 
+        // Catatan: Pastikan Apps Script Anda menggunakan kode terakhir yang saya berikan!
 
         // Fungsi penutup modal
         function closeAnnouncementModal() {
@@ -113,32 +114,41 @@
         }
 
         // =========================================================================
-        // FUNGSI KRITIS: FORMAT TANGGAL DI SISI BROWSER (CLIENT-SIDE)
+        // FUNGSI KRITIS: FORMAT TANGGAL DI SISI BROWSER (CLIENT-SIDE) - FINAL
         // =========================================================================
         function formatTanggalID(rawDateString) {
             if (!rawDateString || rawDateString === '-') return '-';
             
-            // Coba konversi string menjadi objek Date JavaScript
             const dateObj = new Date(rawDateString);
 
-            // Cek jika konversi gagal (Invalid Date)
             if (isNaN(dateObj.getTime())) {
-                return rawDateString; // Kembalikan string mentah jika ada error
+                return rawDateString; 
             }
 
-            // Gunakan fungsi built-in browser (toLocaleDateString) untuk format lokal Indonesia
+            // Opsi untuk Tanggal (termasuk Hari)
             const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            // Opsi untuk Waktu (termasuk zona waktu)
             const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZoneName: 'short' };
             
-            // Contoh format: 'Jumat, 21 November 2025'
             const formattedDate = dateObj.toLocaleDateString('id-ID', dateOptions);
 
-            // Cek apakah ada informasi waktu dalam string (untuk Timestamp Publikasi)
-            if (String(rawDateString).includes(':')) {
+            // Dapatkan komponen waktu (jam, menit, detik) dari objek Date
+            const hours = dateObj.getHours();
+            const minutes = dateObj.getMinutes();
+            const seconds = dateObj.getSeconds();
+            
+            // Cek apakah string input mengandung waktu (untuk membedakan Tanggal Kegiatan vs Timestamp)
+            const hasTimeDataInString = String(rawDateString).includes(':') || String(rawDateString).includes('T');
+            
+            // Tampilkan waktu hanya jika:
+            // 1. String input mengandung data waktu (asumsi ini adalah Timestamp Publikasi)
+            // 2. DAN waktu tersebut BUKAN 00:00:00 (untuk menghindari tampilan 00:00:00 pada Tanggal Kegiatan)
+            if (hasTimeDataInString && (hours !== 0 || minutes !== 0 || seconds !== 0)) {
                 const formattedTime = dateObj.toLocaleTimeString('id-ID', timeOptions);
                 return `${formattedDate} ${formattedTime}`;
             }
-
+            
+            // Hanya tampilkan tanggal (ini untuk Tanggal Kegiatan yang waktunya 00:00:00)
             return formattedDate;
         }
 
@@ -148,10 +158,10 @@
         function showLatestAnnouncement(data) {
             document.getElementById('popup-judul').textContent = data.judul;
             
-            // === BARIS PENTING: MENGGUNAKAN FUNGSI FORMAT BARU ===
+            // === BARIS PENTING: MENGGUNAKAN FUNGSI FORMAT YANG SUDAH DIBERSIHKAN ===
             document.getElementById('popup-tanggal').textContent = formatTanggalID(data.tanggal);
             document.getElementById('popup-timestamp').textContent = formatTanggalID(data.timestamp);
-            // ===================================================
+            // =======================================================================
 
             document.getElementById('popup-kategori').textContent = data.kategori;
             document.getElementById('popup-penanggungJawab').textContent = data.penanggungJawab;
@@ -169,6 +179,7 @@
                     } else if (result.status === 'empty') {
                         console.log('Tidak ada pengumuman terbaru.');
                     } else {
+                        // Tampilkan pesan error jika Apps Script gagal
                         console.error('Gagal mengambil data:', result.message || 'Unknown Error');
                     }
                 })
