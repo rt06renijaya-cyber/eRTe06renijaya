@@ -17,7 +17,7 @@
                 return true;
             } else {
                 // window.location.href = "pengurus06_login.html"; 
-                return true; // Untuk demo, kita izinkan akses
+                return true; // Untuk demo/pengujian, kita izinkan akses
             }
         }
         if (!checkAuth()) { document.body.style.display = 'none'; }
@@ -62,11 +62,18 @@
                 const form = e.target;
                 const submitBtn = form.querySelector('.btn-submit');
                 
+                // --- PERBAIKAN PENTING UNTUK MENGIRIM TEKS KATEGORI ---
+                const kategoriSelect = document.getElementById('kategori');
+                // Ambil TEXT yang dipilih (ini yang akan disimpan di Google Sheet)
+                const kategoriText = kategoriSelect.options[kategoriSelect.selectedIndex].text;
+                
                 // 1. Ambil Data Form
                 const data = {
                     action: 'postAnnouncement', 
                     judul: document.getElementById('judul').value,
-                    kategori: document.getElementById('kategori').value,
+                    // Kita kirimkan data kategori_text yang berisi teks lengkap
+                    kategori: kategoriSelect.value, // (value: umum, keamanan, dll.)
+                    kategori_text: kategoriText, // (text: Umum / Kegiatan, Keamanan & Ketertiban)
                     tanggal: document.getElementById('tanggal').value,
                     penanggungJawab: document.getElementById('penanggungJawab').value,
                     konten: document.getElementById('konten').value 
@@ -81,11 +88,17 @@
                     method: 'POST',
                     body: new URLSearchParams(data)
                 })
-                .then(response => response.json())
+                .then(response => {
+                    // Cek jika response.status bukan 200 (OK), bisa jadi error CORS/URL/Deployment
+                    if (!response.ok) {
+                        throw new Error(`Error HTTP ${response.status}: Cek URL Apps Script dan Deployment.`);
+                    }
+                    return response.json();
+                })
                 .then(result => {
                     if (result.result === 'success') {
                         showCustomAlert('successAlert', 'Pengumuman Terkirim!', 
-                                        'Informasi berhasil dipublikasikan ke Google Sheet dan siap diakses oleh warga.');
+                                         'Informasi berhasil dipublikasikan ke Google Sheet dan siap diakses oleh warga.');
                         form.reset();
                         // Redirect otomatis setelah 3 detik
                         setTimeout(() => {
@@ -94,12 +107,12 @@
 
                     } else {
                         showCustomAlert('successAlert', 'Gagal Kirim!', 
-                                        `Terjadi kesalahan saat menyimpan data: ${result.message || 'Unknown Error'}`, false);
+                                         `Terjadi kesalahan saat menyimpan data: ${result.message || 'Unknown Error'}`, false);
                     }
                 })
                 .catch(error => {
                     showCustomAlert('successAlert', 'Kesalahan Jaringan!', 
-                                    `Tidak dapat terhubung ke server Apps Script. Cek URL dan konsol browser.`, false);
+                                     `Tidak dapat terhubung ke server Apps Script. Detail Error: ${error.message}`, false);
                     console.error('Fetch Error:', error);
                 })
                 .finally(() => {
@@ -353,12 +366,12 @@
                 
                 <div class="form-group">
                     <label for="judul">Judul Pengumuman</label>
-                    <input type="text" id="judul" placeholder="Contoh: Jadwal Kerja Bakti atau Rapat Rutin" required>
+                    <input type="text" id="judul" name="judul" placeholder="Contoh: Jadwal Kerja Bakti atau Rapat Rutin" required>
                 </div>
 
                 <div class="form-group">
                     <label for="kategori">Kategori</label>
-                    <select id="kategori" required>
+                    <select id="kategori" name="kategori" required>
                         <option value="">Pilih Kategori</option>
                         <option value="umum">Umum / Kegiatan</option>
                         <option value="keamanan">Keamanan & Ketertiban</option>
@@ -369,17 +382,17 @@
                 
                 <div class="form-group">
                     <label for="tanggal">Tanggal Publikasi/Kegiatan</label>
-                    <input type="date" id="tanggal" value="2025-11-22" required>
+                    <input type="date" id="tanggal" name="tanggal" value="2025-11-22" required>
                 </div>
 
                 <div class="form-group">
                     <label for="penanggungJawab">Penanggung Jawab (Nama Pengurus)</label>
-                    <input type="text" id="penanggungJawab" placeholder="Contoh: Ketua RT, Bendahara, Seksi Keamanan" required>
+                    <input type="text" id="penanggungJawab" name="penanggungJawab" placeholder="Contoh: Ketua RT, Bendahara, Seksi Keamanan" required>
                 </div>
 
                 <div class="form-group">
                     <label for="konten">Isi Lengkap Pengumuman</label>
-                    <textarea id="konten" placeholder="Tuliskan detail lengkap informasi yang ingin disampaikan kepada warga..." required></textarea>
+                    <textarea id="konten" name="konten" placeholder="Tuliskan detail lengkap informasi yang ingin disampaikan kepada warga..." required></textarea>
                 </div>
 
                 <button type="submit" class="btn-submit">
