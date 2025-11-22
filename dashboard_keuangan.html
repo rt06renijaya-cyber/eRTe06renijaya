@@ -1,4 +1,4 @@
-\<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="utf-8" />
@@ -136,6 +136,13 @@
         padding-bottom: 10px;
     }
 
+    /* Tambahan: Styling untuk Canvas/Grafik */
+    .card canvas {
+        background: var(--card);
+        padding: 10px 0 0 0; 
+        border-radius: 8px;
+    }
+
     /* Summary Cards */
     /* MODIFIKASI: Grid 2 kolom di HP, 4 kolom di desktop */
     .summary-grid {
@@ -201,6 +208,7 @@
         width: 100%;
         border-collapse: collapse;
         margin-top: 15px;
+        min-width: 500px; /* Minimal lebar tabel untuk mencegah terlalu padat */
     }
     /* MODIFIKASI: Mengatur font yang lebih kecil pada tabel di HP */
     .transaction-table th, .transaction-table td {
@@ -317,6 +325,11 @@
         .transaction-table th:nth-child(5), 
         .transaction-table td:nth-child(5) { /* Kolom Jenis */
             display: none;
+        }
+        
+        /* Mengatur agar tabel tetap terlihat rapi di layar kecil */
+        .transaction-table {
+            min-width: unset;
         }
     }
 </style>
@@ -655,34 +668,87 @@ function updateChartComparison(data, currentMonthName, prevMonthName) {
                 {
                     label: `Bulan Ini (${currentMonthName})`,
                     data: data.current,
-                    backgroundColor: ['rgba(40, 167, 69, 0.9)', 'rgba(255, 193, 7, 0.9)'], 
-                    borderColor: ['var(--success)', 'var(--loading)'],
+                    // WARNA BARU
+                    backgroundColor: ['var(--success)', 'var(--loading)'],
+                    borderColor: 'white',
                     borderWidth: 1,
-                    borderRadius: 4
+                    borderRadius: 6, // Sudut membulat
+                    barPercentage: 0.8,
+                    categoryPercentage: 0.8
                 },
                 {
                     label: `Bulan Lalu (${prevMonthName})`,
                     data: data.previous,
-                    backgroundColor: ['rgba(40, 167, 69, 0.4)', 'rgba(255, 193, 7, 0.4)'], 
-                    borderColor: ['var(--success)', 'var(--loading)'],
+                    // WARNA BARU (Transparan)
+                    backgroundColor: ['#b3e6c0', '#ffe9b3'], 
+                    borderColor: 'white',
                     borderWidth: 1,
-                    borderRadius: 4
+                    borderRadius: 6,
+                    barPercentage: 0.8,
+                    categoryPercentage: 0.8
                 }
             ]
         },
         options: {
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false, 
+            aspectRatio: 1.5, // Rasio 3:2 (Lebar:Tinggi) untuk desktop
+            
             plugins: {
-                legend: { position: 'top', },
-                title: { display: false, }
+                legend: { 
+                    position: 'top', 
+                    labels: {
+                        padding: 20,
+                        font: {
+                            family: 'Poppins',
+                            weight: 600
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            // Memformat nilai Rupiah di Tooltip
+                            if (context.parsed.y !== null) {
+                                label += formatRupiah(context.parsed.y);
+                            }
+                            return label;
+                        }
+                    },
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleFont: { size: 14, weight: '700' },
+                    bodyFont: { size: 13 }
+                }
             },
             scales: {
+                x: {
+                    grid: {
+                        display: false // Hilangkan garis grid vertikal
+                    },
+                    ticks: {
+                        font: {
+                            weight: '600'
+                        }
+                    }
+                },
                 y: {
                     beginAtZero: true,
-                    title: { display: true, text: 'Nominal (Rp)' },
+                    title: { 
+                        display: true, 
+                        text: 'Nominal (Rp)',
+                        font: { weight: '600' }
+                    },
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.08)',
+                        borderDash: [5, 5] // Garis putus-putus
+                    },
                     ticks: {
                         callback: function(value) {
+                            // Format sumbu Y agar lebih mudah dibaca (Jt atau K)
                             if (value >= 1000000) return (value / 1000000) + ' Jt';
                             if (value >= 1000) return (value / 1000) + ' K';
                             return value;
