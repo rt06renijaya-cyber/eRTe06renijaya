@@ -20,7 +20,7 @@
         }
 
         .container {
-            max-width: 1000px; /* Lebar lebih kecil fokus pada layanan */
+            max-width: 1000px; 
             margin: 0 auto;
             padding: 30px 20px 60px;
             text-align: center;
@@ -33,11 +33,31 @@
             /* Warna primer (biru) untuk layanan administratif */
             background: linear-gradient(135deg, #0056b3, #007bff); 
             color: white;
-            padding: 80px 20px 40px;
+            padding: 40px 20px 40px; /* Padding disesuaikan */
             text-align: center;
             box-shadow: 0 5px 20px rgba(0,0,0,0.3);
             margin-bottom: 40px;
         }
+
+        /* BREADCRUMB - Terintegrasi di Header */
+        .page-header .breadcrumb {
+            text-align: center; /* Sesuaikan posisi sesuai keinginan */
+            margin-bottom: 25px; /* Jarak dengan konten header */
+            font-size: 0.95em;
+            opacity: 0.9;
+            color: #cce0ff; /* Warna terang untuk teks biasa */
+        }
+
+        .page-header .breadcrumb a {
+            color: #ffeb3b; /* Warna kuning kontras di header biru */
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .page-header .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
 
         .page-header h1 {
             font-size: 2.8em;
@@ -178,6 +198,12 @@
 <body>
 
     <div class="page-header">
+        <div class="breadcrumb">
+            <a href="warga06.html"><i class="fas fa-home"></i> Portal Warga</a> 
+            &gt; 
+            Layanan Administratif
+        </div>
+        
         <i class="fas fa-file-signature" style="font-size: 3em; margin-bottom: 15px;"></i>
         <h1>Pusat Layanan Administratif RT. 06</h1>
         <p>Ajukan berbagai permohonan surat dan izin kegiatan dengan mudah dan cepat melalui formulir digital.</p>
@@ -236,7 +262,7 @@
         </div>
         
         <div style="margin-top: 40px;">
-            <a href="index.html" style="color: #007bff; text-decoration: none; font-weight: 600;"><i class="fas fa-arrow-left"></i> Kembali ke Portal Utama</a>
+            <a href="warga06.html" style="color: #007bff; text-decoration: none; font-weight: 600;"><i class="fas fa-arrow-left"></i> Kembali ke Portal Utama</a>
         </div>
     </div>
 
